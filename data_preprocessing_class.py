@@ -51,7 +51,10 @@ class PreprocessingData:
         valid_offer_id = ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9']
         for offer_id in offer_id_list:
             # offer_id has 10 valid values, except -1 represent nan values of offer_id
+
+            # !!!Attention: when person doesn't have received any offer, will be ignored. But they may have transactions.
             if offer_id not in valid_offer_id:
+                # Alternative: see Summary in Notebook
                 continue
             unique_offer_id = groupby_offer_id.get_group(offer_id)
             df_units, units_count = self.cut_unique_offer_id_2_units(unique_offer_id)
@@ -133,6 +136,7 @@ class PreprocessingData:
             if is_received:
                 # at least one transaction exist
                 if transactions.shape[0] != 0:
+                    # if there is no transactions, we can't use `transactions.time`
                     transaction_time = np.array(transactions.time)
                     time_begin = time_received
                     time_end = time_received + duration
@@ -146,6 +150,10 @@ class PreprocessingData:
                         valid_transactions.head(1).loc[:, 'offer_id'] = offer_id
                         time_transaction = valid_transactions.head(1).time.min()
 
+                        # update time_completed with the 1st valid transaction
+                        # !!!Attention: type of time_transaction is 'str'
+                        time_completed = float(time_transaction)
+
                         # get the data in original dataset transcript_offer, to update the offer_id of transaction with the related offer_id
 
                         valid_transactions_2b_labeled = self.transcript_offer.loc[valid_transactions.index]
@@ -157,6 +165,9 @@ class PreprocessingData:
                         label_effective_offer = 1
                         amount_with_offer = valid_transactions.head(1).amount.sum()
 
+                    # received, person has transaction, but for this offer_id has no valid transaction
+                    else:
+                        label_effective_offer = 0
                 # received but without transaction
                 else:
                     label_effective_offer = 0
@@ -222,7 +233,7 @@ class PreprocessingData:
 
             if is_received:
                 if is_completed:
-                    #REMEMBER: to be completed, there must be transaction(s)
+                    #REMEMBER: to be completed, there must be transaction(s) & amount >= difficulty
                     transaction_time = np.array(transactions.time)
 
                     #valid transaction(s) exist between 'offer received' and 'offer completed'
