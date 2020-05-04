@@ -129,6 +129,7 @@ def get_dateset_from_informational_offer(df_units, units_count, transactions):
         if is_received:
             # at least one transaction exist
             if transactions.shape[0] != 0:
+                # if there is no transactions, we can't use `transactions.time`
                 transaction_time = np.array(transactions.time)
                 time_begin = time_received
                 time_end = time_received + duration
@@ -142,6 +143,10 @@ def get_dateset_from_informational_offer(df_units, units_count, transactions):
                     valid_transactions.head(1).loc[:, 'offer_id'] = offer_id
                     time_transaction = valid_transactions.head(1).time.min()
 
+                    # update time_completed with the 1st valid transaction
+                    # !!!Attention: type of time_transaction is 'str'
+                    time_completed = float(time_transaction)
+
                     # get the data in original dataset transcript_offer, to update the offer_id of transaction with the related offer_id
                     global transcript_offer
                     valid_transactions_2b_labeled = transcript_offer.loc[valid_transactions.index]
@@ -152,6 +157,9 @@ def get_dateset_from_informational_offer(df_units, units_count, transactions):
 
                     label_effective_offer = 1
                     amount_with_offer = valid_transactions.head(1).amount.sum()
+                # received, person has transaction, but for this offer_id has no valid transaction
+                else:
+                    label_effective_offer = 0
 
             # received but without transaction
             else:
