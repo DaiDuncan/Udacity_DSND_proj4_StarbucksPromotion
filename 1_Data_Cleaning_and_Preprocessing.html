@@ -13119,8 +13119,7 @@ div#notebook {
 II.<a href="#2">Data Cleaning</a><br>
 III.<a href="#3">Data Preprocessing</a><br>
 　　3.1. <a href="#3.1">Wrangle Data</a><br>
-　　　　Method.1 <a href="#Method-1-wrangle">Using a moduled class</a><br>
-　　　　Method.2 <a href="#Method-2-wrangle">Based on following functions</a> (better for debugging)<br>
+　　　　Method <a href="#Method-1-wrangle">Using a moduled class</a><br>
 　　3.2. <a href="#3.2">CHECK the wrangled data</a><br>
 <a href="#References">References</a></p>
 
@@ -13150,7 +13149,7 @@ III.<a href="#3">Data Preprocessing</a><br>
 <span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
 <span class="o">%</span><span class="k">matplotlib</span> inline
 
-<span class="c1"># read in the json files</span>
+<span class="c1"># load in json files</span>
 <span class="n">portfolio</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_json</span><span class="p">(</span><span class="s1">&#39;data/portfolio.json&#39;</span><span class="p">,</span> <span class="n">orient</span><span class="o">=</span><span class="s1">&#39;records&#39;</span><span class="p">,</span> <span class="n">lines</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 <span class="n">profile</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_json</span><span class="p">(</span><span class="s1">&#39;data/profile.json&#39;</span><span class="p">,</span> <span class="n">orient</span><span class="o">=</span><span class="s1">&#39;records&#39;</span><span class="p">,</span> <span class="n">lines</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 <span class="n">transcript</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_json</span><span class="p">(</span><span class="s1">&#39;data/transcript.json&#39;</span><span class="p">,</span> <span class="n">orient</span><span class="o">=</span><span class="s1">&#39;records&#39;</span><span class="p">,</span> <span class="n">lines</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
@@ -13748,7 +13747,7 @@ memory usage: 9.4+ MB
 <div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
 </div><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<h4 id="2.1.1.-Encode-the-column-'id'"><code>2.1.1.</code> Encode the column 'id'<a class="anchor-link" href="#2.1.1.-Encode-the-column-'id'">&#182;</a></h4><p>(related to DataFrame <code>transcript</code>, <code>id</code> Encoding should done before .dropna())</p>
+<h4 id="2.1.1.-Encode-the-column-'id'"><code>2.1.1.</code> Encode the column 'id'<a class="anchor-link" href="#2.1.1.-Encode-the-column-'id'">&#182;</a></h4><p>(related to DataFrame <code>transcript</code>, <code>id</code> Encoding here should be done before .dropna())</p>
 <ol>
 <li>Map 'id' to int number</li>
 </ol>
@@ -13761,42 +13760,34 @@ memory usage: 9.4+ MB
 <div class="prompt input_prompt">In&nbsp;[9]:</div>
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="c1"># set the dict{&quot;original Encoding&quot;: int}</span>
-<span class="n">id_2_int</span> <span class="o">=</span> <span class="n">defaultdict</span><span class="p">(</span><span class="nb">int</span><span class="p">)</span>
-<span class="n">encoding_ids</span> <span class="o">=</span> <span class="n">profile</span><span class="p">[</span><span class="s1">&#39;id&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">unique</span><span class="p">()</span>
+<div class=" highlight hl-ipython3"><pre><span></span><span class="c1"># create dict: {&quot;original Code&quot;: int number}</span>
+<span class="n">id_mapping</span> <span class="o">=</span> <span class="n">defaultdict</span><span class="p">(</span><span class="nb">int</span><span class="p">)</span>
+
+<span class="c1"># original codes of ids</span>
+<span class="n">id_codes</span> <span class="o">=</span> <span class="n">profile</span><span class="p">[</span><span class="s1">&#39;id&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">unique</span><span class="p">()</span><span class="o">.</span><span class="n">tolist</span><span class="p">()</span>
+
 <span class="n">num</span> <span class="o">=</span> <span class="mi">0</span>
-<span class="k">for</span> <span class="n">encoding_id</span> <span class="ow">in</span> <span class="n">encoding_ids</span><span class="p">:</span>
-    <span class="n">id_2_int</span><span class="p">[</span><span class="n">encoding_id</span><span class="p">]</span> <span class="o">=</span> <span class="n">num</span>
+<span class="k">for</span> <span class="n">id_code</span> <span class="ow">in</span> <span class="n">id_codes</span><span class="p">:</span>
+    <span class="n">id_mapping</span><span class="p">[</span><span class="n">id_code</span><span class="p">]</span> <span class="o">=</span> <span class="n">num</span>
     <span class="n">num</span> <span class="o">+=</span> <span class="mi">1</span>
     
-<span class="k">def</span> <span class="nf">person_id_mapping</span><span class="p">(</span><span class="n">df_2b_mapped</span><span class="p">,</span> <span class="n">col</span><span class="p">,</span> <span class="n">mapping_dict</span><span class="o">=</span><span class="n">id_2_int</span><span class="p">):</span>
-    <span class="sd">&#39;&#39;&#39;Map &#39;id&#39; from Encoding to int </span>
+<span class="k">def</span> <span class="nf">map_id_2_int</span><span class="p">(</span><span class="n">df</span><span class="p">,</span> <span class="n">map_col</span><span class="p">,</span> <span class="n">map_dict</span><span class="o">=</span><span class="n">id_mapping</span><span class="p">):</span>
+    <span class="sd">&#39;&#39;&#39;Map &#39;id&#39; from encode to int </span>
 <span class="sd">    </span>
 <span class="sd">    INPUT:</span>
-<span class="sd">        df_2b_mapped - (DataFrame) the target DataFrame in which &#39;id&#39; to be mapped</span>
-<span class="sd">        col - (str) the target col (&#39;id&#39;) to be mapped</span>
-<span class="sd">        mapping_dict - (dict) mapping dict {&quot;original Encoding&quot;: int}</span>
+<span class="sd">    - df(DataFrame): the target DataFrame in which &#39;id&#39; to be mapped</span>
+<span class="sd">    - map_col(str): the target col (&#39;id&#39;) to be mapped</span>
+<span class="sd">    - map_dict(dict): mapping dict {&quot;original Code&quot;: int number}</span>
 <span class="sd">    </span>
 <span class="sd">    OUTPUT:</span>
-<span class="sd">        df_2_map - (DataFrame) already mapped DataFrame</span>
+<span class="sd">    - df(DataFrame): already mapped DataFrame</span>
 <span class="sd">    &#39;&#39;&#39;</span>
-    <span class="n">df_2b_mapped</span><span class="p">[</span><span class="n">col</span><span class="p">]</span> <span class="o">=</span> <span class="n">df_2b_mapped</span><span class="p">[</span><span class="n">col</span><span class="p">]</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">id_2_int</span><span class="p">[</span><span class="n">x</span><span class="p">])</span>
+    <span class="n">df</span><span class="p">[</span><span class="n">map_col</span><span class="p">]</span> <span class="o">=</span> <span class="n">df</span><span class="p">[</span><span class="n">map_col</span><span class="p">]</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">id_mapping</span><span class="p">[</span><span class="n">x</span><span class="p">])</span>
     
-    <span class="k">return</span> <span class="n">df_2b_mapped</span>
-</pre></div>
+    <span class="k">return</span> <span class="n">df</span>
 
-    </div>
-</div>
-</div>
-
-</div>
-<div class="cell border-box-sizing code_cell rendered">
-<div class="input">
-<div class="prompt input_prompt">In&nbsp;[10]:</div>
-<div class="inner_cell">
-    <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="c1"># map &#39;id&#39; in profile_cleaned from Encoding to int</span>
-<span class="n">profile_2_clean</span> <span class="o">=</span> <span class="n">person_id_mapping</span><span class="p">(</span><span class="n">profile</span><span class="p">,</span> <span class="s1">&#39;id&#39;</span><span class="p">)</span>
+<span class="c1"># map &#39;id&#39; in profile from encodes to int</span>
+<span class="n">profile_2_clean</span> <span class="o">=</span> <span class="n">map_id_2_int</span><span class="p">(</span><span class="n">profile</span><span class="p">,</span> <span class="s1">&#39;id&#39;</span><span class="p">)</span>
 <span class="n">profile_2_clean</span>
 </pre></div>
 
@@ -13810,7 +13801,7 @@ memory usage: 9.4+ MB
 
 <div class="output_area">
 
-    <div class="prompt output_prompt">Out[10]:</div>
+    <div class="prompt output_prompt">Out[9]:</div>
 
 
 
@@ -13956,28 +13947,17 @@ memory usage: 9.4+ MB
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[11]:</div>
+<div class="prompt input_prompt">In&nbsp;[10]:</div>
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="c1"># get the NaN and illegal values in &#39;income&#39;, &#39;gender&#39;, &#39;age&#39;</span>
-<span class="n">idx_nan_in_income</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">profile_2_clean</span><span class="o">.</span><span class="n">income</span><span class="o">.</span><span class="n">isnull</span><span class="p">())[</span><span class="mi">0</span><span class="p">]</span>
-<span class="n">idx_none_in_gender</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">profile_2_clean</span><span class="o">.</span><span class="n">gender</span><span class="o">.</span><span class="n">isnull</span><span class="p">())[</span><span class="mi">0</span><span class="p">]</span>
-<span class="n">idx_illegal_age</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">profile_2_clean</span><span class="o">.</span><span class="n">age</span><span class="o">==</span><span class="mi">118</span><span class="p">)</span>
-</pre></div>
+<div class=" highlight hl-ipython3"><pre><span></span><span class="c1"># get the NaNs and illegal values in &#39;income&#39;, &#39;gender&#39;, &#39;age&#39;</span>
+<span class="n">income_nan_Index</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">profile_2_clean</span><span class="o">.</span><span class="n">income</span><span class="o">.</span><span class="n">isnull</span><span class="p">())[</span><span class="mi">0</span><span class="p">]</span>  <span class="c1"># index array of &#39;NaNs&#39;</span>
+<span class="n">gender_nan_Index</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">profile_2_clean</span><span class="o">.</span><span class="n">gender</span><span class="o">.</span><span class="n">isnull</span><span class="p">())[</span><span class="mi">0</span><span class="p">]</span> <span class="c1"># index array of &#39;Nones&#39;</span>
+<span class="n">illegal_age_Index</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">profile_2_clean</span><span class="o">.</span><span class="n">age</span><span class="o">==</span><span class="mi">118</span><span class="p">)</span>
 
-    </div>
-</div>
-</div>
-
-</div>
-<div class="cell border-box-sizing code_cell rendered">
-<div class="input">
-<div class="prompt input_prompt">In&nbsp;[12]:</div>
-<div class="inner_cell">
-    <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="c1"># the illegal values appear in the same index </span>
-<span class="nb">print</span><span class="p">((</span><span class="n">idx_nan_in_income</span>  <span class="o">==</span> <span class="n">idx_none_in_gender</span><span class="p">)</span><span class="o">.</span><span class="n">all</span><span class="p">())</span>
-<span class="nb">print</span><span class="p">((</span><span class="n">idx_nan_in_income</span>  <span class="o">==</span> <span class="n">idx_illegal_age</span><span class="p">)</span><span class="o">.</span><span class="n">all</span><span class="p">())</span>
+<span class="c1"># the illegal values appear in the same index </span>
+<span class="nb">print</span><span class="p">((</span><span class="n">income_nan_Index</span>  <span class="o">==</span> <span class="n">gender_nan_Index</span><span class="p">)</span><span class="o">.</span><span class="n">all</span><span class="p">())</span>
+<span class="nb">print</span><span class="p">((</span><span class="n">income_nan_Index</span>  <span class="o">==</span> <span class="n">illegal_age_Index</span><span class="p">)</span><span class="o">.</span><span class="n">all</span><span class="p">())</span>
 </pre></div>
 
     </div>
@@ -14006,7 +13986,7 @@ True
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[13]:</div>
+<div class="prompt input_prompt">In&nbsp;[11]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="c1"># drop all 2175 NaNs</span>
@@ -14024,7 +14004,7 @@ True
 
 <div class="output_area">
 
-    <div class="prompt output_prompt">Out[13]:</div>
+    <div class="prompt output_prompt">Out[11]:</div>
 
 
 
@@ -14157,7 +14137,7 @@ True
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[14]:</div>
+<div class="prompt input_prompt">In&nbsp;[12]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="c1"># visualization</span>
@@ -14227,21 +14207,22 @@ True
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[15]:</div>
+<div class="prompt input_prompt">In&nbsp;[13]:</div>
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="c1">#set the dict{&quot;original Encoding&quot;: int}</span>
-<span class="n">offer_id_2_int</span> <span class="o">=</span> <span class="n">defaultdict</span><span class="p">()</span>
-<span class="n">offer_ids</span> <span class="o">=</span> <span class="n">portfolio</span><span class="p">[</span><span class="s1">&#39;id&#39;</span><span class="p">]</span>
+<div class=" highlight hl-ipython3"><pre><span></span><span class="c1"># create dict: {&quot;original Code&quot;: int number}</span>
+<span class="n">offer_id_mapping</span> <span class="o">=</span> <span class="n">defaultdict</span><span class="p">()</span>
+<span class="n">offer_ids</span> <span class="o">=</span> <span class="n">portfolio</span><span class="p">[</span><span class="s1">&#39;id&#39;</span><span class="p">]</span>  <span class="c1"># 10 ids codes</span>
+
 <span class="n">label</span> <span class="o">=</span> <span class="mi">0</span>
 <span class="k">for</span> <span class="n">offer_id</span> <span class="ow">in</span> <span class="n">offer_ids</span><span class="p">:</span>
-    <span class="n">offer_id_2_int</span><span class="p">[</span><span class="n">offer_id</span><span class="p">]</span><span class="o">=</span><span class="n">label</span>
+    <span class="n">offer_id_mapping</span><span class="p">[</span><span class="n">offer_id</span><span class="p">]</span><span class="o">=</span><span class="n">label</span>
     <span class="n">label</span> <span class="o">+=</span> <span class="mi">1</span>
 
-<span class="c1"># later, we use .fillna(-1) to replace the NaN in &#39;offer_id&#39; in transcript_cleaned</span>
-<span class="n">offer_id_2_int</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">=-</span><span class="mi">1</span>
+<span class="c1"># for later use, we use .fillna(-1) to replace the NaN in &#39;offer_id&#39;</span>
+<span class="n">offer_id_mapping</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">=-</span><span class="mi">1</span>
 
-<span class="n">offer_id_2_int</span>
+<span class="n">offer_id_mapping</span>
 </pre></div>
 
     </div>
@@ -14254,7 +14235,7 @@ True
 
 <div class="output_area">
 
-    <div class="prompt output_prompt">Out[15]:</div>
+    <div class="prompt output_prompt">Out[13]:</div>
 
 
 
@@ -14282,11 +14263,12 @@ True
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[16]:</div>
+<div class="prompt input_prompt">In&nbsp;[14]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="n">portfolio_2_clean</span> <span class="o">=</span> <span class="n">portfolio</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
-<span class="n">portfolio_2_clean</span><span class="p">[</span><span class="s1">&#39;id&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">portfolio</span><span class="p">[</span><span class="s1">&#39;id&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">offer_id_2_int</span><span class="p">[</span><span class="n">x</span><span class="p">])</span>
+
+<span class="n">portfolio_2_clean</span><span class="p">[</span><span class="s1">&#39;id&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">portfolio</span><span class="p">[</span><span class="s1">&#39;id&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">offer_id_mapping</span><span class="p">[</span><span class="n">x</span><span class="p">])</span>
 <span class="n">portfolio_2_clean</span>
 </pre></div>
 
@@ -14300,7 +14282,7 @@ True
 
 <div class="output_area">
 
-    <div class="prompt output_prompt">Out[16]:</div>
+    <div class="prompt output_prompt">Out[14]:</div>
 
 
 
@@ -14437,7 +14419,8 @@ True
 </div><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
 <h4 id="2.2.2.-Column:-'channels'"><code>2.2.2.</code> Column: 'channels'<a class="anchor-link" href="#2.2.2.-Column:-'channels'">&#182;</a></h4><ol>
-<li>Extract the list values into dependent columns</li>
+<li>Extract the list values into dependent columns<br>
+<a href="https://intellipaat.com/community/32880/create-dummies-from-a-column-with-multiple-values-in-pandas">References 1</a></li>
 </ol>
 
 </div>
@@ -14445,11 +14428,10 @@ True
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[17]:</div>
+<div class="prompt input_prompt">In&nbsp;[15]:</div>
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="c1"># References[1]</span>
-<span class="c1"># Extract the list values into dependent columns</span>
+<div class=" highlight hl-ipython3"><pre><span></span><span class="c1"># Extract the list values in &#39;channels&#39; into dependent columns</span>
 <span class="n">channels_2_df</span> <span class="o">=</span> <span class="n">portfolio_2_clean</span><span class="p">[</span><span class="s1">&#39;channels&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">str</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">sep</span><span class="o">=</span><span class="s1">&#39;*&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">str</span><span class="o">.</span><span class="n">get_dummies</span><span class="p">(</span><span class="n">sep</span><span class="o">=</span><span class="s1">&#39;*&#39;</span><span class="p">)</span>
 </pre></div>
 
@@ -14460,7 +14442,7 @@ True
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[18]:</div>
+<div class="prompt input_prompt">In&nbsp;[16]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="c1"># concat the extracted data from &#39;channels&#39; with the original data, and delete &#39;channels&#39;</span>
@@ -14479,7 +14461,7 @@ True
 
 <div class="output_area">
 
-    <div class="prompt output_prompt">Out[18]:</div>
+    <div class="prompt output_prompt">Out[16]:</div>
 
 
 
@@ -14648,9 +14630,9 @@ True
 <div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
 </div><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<h3 id="2.3.-Transactional-records:-transcript">2.3. Transactional records: <code>transcript</code><a class="anchor-link" href="#2.3.-Transactional-records:-transcript">&#182;</a></h3><h4 id="2.3.1.-Encoding-the-column-'person'"><code>2.3.1.</code> Encoding the column 'person'<a class="anchor-link" href="#2.3.1.-Encoding-the-column-'person'">&#182;</a></h4><ol>
-<li>map 'person' from Encoding to int</li>
-<li>update synchronous to dataset <code>profile_cleaned</code>(some person_id were dropped)</li>
+<h3 id="2.3.-Transactional-records:-transcript">2.3. Transactional records: <code>transcript</code><a class="anchor-link" href="#2.3.-Transactional-records:-transcript">&#182;</a></h3><h4 id="2.3.1.-Encode-the-column-'person'"><code>2.3.1.</code> Encode the column 'person'<a class="anchor-link" href="#2.3.1.-Encode-the-column-'person'">&#182;</a></h4><ol>
+<li>map 'person' from encodes to int</li>
+<li>update synchronous with dataset <code>profile_cleaned</code>(some person_id were dropped)</li>
 </ol>
 
 </div>
@@ -14658,12 +14640,12 @@ True
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[19]:</div>
+<div class="prompt input_prompt">In&nbsp;[17]:</div>
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="c1"># map &#39;person&#39; in transcript_cleaned from Encoding to int</span>
-<span class="c1"># there are the same number of unique person in both transcript and profile: 17,000</span>
-<span class="n">transcript_2_clean</span> <span class="o">=</span> <span class="n">person_id_mapping</span><span class="p">(</span><span class="n">transcript</span><span class="p">,</span> <span class="s1">&#39;person&#39;</span><span class="p">)</span>
+<div class=" highlight hl-ipython3"><pre><span></span><span class="c1"># map &#39;person&#39; from encodes to int</span>
+<span class="c1"># there are the same number of unique person in datasets transcript and profile: 17,000</span>
+<span class="n">transcript_2_clean</span> <span class="o">=</span> <span class="n">map_id_2_int</span><span class="p">(</span><span class="n">transcript</span><span class="p">,</span> <span class="s1">&#39;person&#39;</span><span class="p">)</span>
 </pre></div>
 
     </div>
@@ -14673,17 +14655,17 @@ True
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[20]:</div>
+<div class="prompt input_prompt">In&nbsp;[18]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="c1"># update synchronous to dataset profile_cleaned(some person_id were dropped)</span>
 <span class="n">valid_person</span> <span class="o">=</span> <span class="n">profile_cleaned</span><span class="o">.</span><span class="n">id</span><span class="o">.</span><span class="n">unique</span><span class="p">()</span>
-<span class="n">is_valid_person</span> <span class="o">=</span> <span class="n">transcript_2_clean</span><span class="o">.</span><span class="n">person</span><span class="o">.</span><span class="n">isin</span><span class="p">(</span><span class="n">profile_cleaned</span><span class="o">.</span><span class="n">id</span><span class="o">.</span><span class="n">unique</span><span class="p">())</span>
+<span class="n">is_valid_person</span> <span class="o">=</span> <span class="n">transcript_2_clean</span><span class="o">.</span><span class="n">person</span><span class="o">.</span><span class="n">isin</span><span class="p">(</span><span class="n">valid_person</span><span class="p">)</span>
 <span class="n">transcript_2_clean</span> <span class="o">=</span> <span class="n">transcript_2_clean</span><span class="p">[</span><span class="n">is_valid_person</span><span class="p">]</span>
 
 <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;number of unique person at begin is </span><span class="si">{}</span><span class="s2">&quot;</span> <span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">transcript</span><span class="o">.</span><span class="n">person</span><span class="o">.</span><span class="n">nunique</span><span class="p">()))</span>
 <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;number of unique person synchronous updated is </span><span class="si">{}</span><span class="s2">&quot;</span> <span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">transcript_2_clean</span><span class="o">.</span><span class="n">person</span><span class="o">.</span><span class="n">nunique</span><span class="p">()))</span>
-<span class="n">transcript_2_clean</span> <span class="c1">#before size (306534,4)</span>
+<span class="n">transcript_2_clean</span> <span class="c1"># size (306534,4) at begin</span>
 </pre></div>
 
     </div>
@@ -14708,7 +14690,7 @@ number of unique person synchronous updated is 14825
 
 <div class="output_area">
 
-    <div class="prompt output_prompt">Out[20]:</div>
+    <div class="prompt output_prompt">Out[18]:</div>
 
 
 
@@ -14839,7 +14821,7 @@ number of unique person synchronous updated is 14825
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[21]:</div>
+<div class="prompt input_prompt">In&nbsp;[19]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="c1"># Extract the dict values into dependent columns</span>
@@ -14853,10 +14835,10 @@ number of unique person synchronous updated is 14825
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[22]:</div>
+<div class="prompt input_prompt">In&nbsp;[20]:</div>
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="c1"># Combine the data in &#39;offer id&#39; into &#39;offer_id&#39; (they belong to same data: but in wrong name)</span>
+<div class=" highlight hl-ipython3"><pre><span></span><span class="c1"># Combine the data in &#39;offer id&#39; into &#39;offer_id&#39; (they belong to same data: but in different name)</span>
 <span class="n">is_offer_id_2b_updated</span> <span class="o">=</span> <span class="n">value_2_df</span><span class="p">[</span><span class="s1">&#39;offer id&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">notnull</span><span class="p">()</span>
 <span class="n">value_2_df</span><span class="p">[</span><span class="s1">&#39;offer_id&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">is_offer_id_2b_updated</span><span class="p">,</span> <span class="n">value_2_df</span><span class="p">[</span><span class="s1">&#39;offer id&#39;</span><span class="p">],</span> <span class="n">value_2_df</span><span class="p">[</span><span class="s1">&#39;offer_id&#39;</span><span class="p">])</span>
 </pre></div>
@@ -14868,11 +14850,11 @@ number of unique person synchronous updated is 14825
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[23]:</div>
+<div class="prompt input_prompt">In&nbsp;[21]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="c1"># in original data: old &#39;offer_id&#39; appears together with &#39;reward&#39;</span>
-<span class="c1"># check: number of new &#39;offer_id&#39; == (number of &#39;reward&#39;) +  (number of &#39;offer id&#39;)</span>
+<span class="c1"># !!!CHECK: number of updated &#39;offer_id&#39; == (number of &#39;reward&#39;) +  (number of &#39;offer id&#39;)</span>
 <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;The number of data in &#39;offer id&#39; is </span><span class="si">{}</span><span class="s2">&quot;</span>  <span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">value_2_df</span><span class="p">[</span><span class="s1">&#39;offer id&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">count</span><span class="p">()))</span>
 <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;The number of data in &#39;offer_id&#39; is </span><span class="si">{}</span><span class="s2">&quot;</span>  <span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">value_2_df</span><span class="p">[</span><span class="s1">&#39;reward&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">count</span><span class="p">()))</span> <span class="c1"># before updated, bounded with &#39;reward&#39;</span>
 <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;The number of data in updated &#39;offer_id&#39; is </span><span class="si">{}</span><span class="s2"> == </span><span class="si">{}</span><span class="s2">+</span><span class="si">{}</span><span class="s2">&quot;</span>  <span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">value_2_df</span><span class="p">[</span><span class="s1">&#39;offer_id&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">count</span><span class="p">(),</span> <span class="n">value_2_df</span><span class="p">[</span><span class="s1">&#39;offer id&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">count</span><span class="p">(),</span> <span class="n">value_2_df</span><span class="p">[</span><span class="s1">&#39;reward&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">count</span><span class="p">()))</span>
@@ -14905,7 +14887,7 @@ The number of data in updated &#39;offer_id&#39; is 148805 == 116361+32444
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[24]:</div>
+<div class="prompt input_prompt">In&nbsp;[22]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="c1"># drop the column &#39;offer id&#39;</span>
@@ -14923,7 +14905,7 @@ The number of data in updated &#39;offer_id&#39; is 148805 == 116361+32444
 
 <div class="output_area">
 
-    <div class="prompt output_prompt">Out[24]:</div>
+    <div class="prompt output_prompt">Out[22]:</div>
 
 
 
@@ -15032,7 +15014,7 @@ The number of data in updated &#39;offer_id&#39; is 148805 == 116361+32444
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[25]:</div>
+<div class="prompt input_prompt">In&nbsp;[23]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="c1"># concat value_2_df to the original dataset transcript</span>
@@ -15061,12 +15043,14 @@ The number of data in updated &#39;offer_id&#39; is 148805 == 116361+32444
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[26]:</div>
+<div class="prompt input_prompt">In&nbsp;[24]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="c1"># set the NaNs to special values</span>
 <span class="n">transcript_2_clean</span><span class="o">.</span><span class="n">fillna</span><span class="p">(</span><span class="n">value</span><span class="o">=</span><span class="p">{</span><span class="s1">&#39;amount&#39;</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span> <span class="s1">&#39;offer_id&#39;</span><span class="p">:</span> <span class="o">-</span><span class="mi">1</span><span class="p">},</span> <span class="n">axis</span> <span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">inplace</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-<span class="n">transcript_2_clean</span><span class="p">[</span><span class="s1">&#39;offer_id&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">transcript_2_clean</span><span class="p">[</span><span class="s1">&#39;offer_id&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">offer_id_2_int</span><span class="p">[</span><span class="n">x</span><span class="p">])</span>
+
+<span class="c1"># map offer_id to int number</span>
+<span class="n">transcript_2_clean</span><span class="p">[</span><span class="s1">&#39;offer_id&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">transcript_2_clean</span><span class="p">[</span><span class="s1">&#39;offer_id&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">offer_id_mapping</span><span class="p">[</span><span class="n">x</span><span class="p">])</span>
 </pre></div>
 
     </div>
@@ -15083,7 +15067,7 @@ The number of data in updated &#39;offer_id&#39; is 148805 == 116361+32444
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[27]:</div>
+<div class="prompt input_prompt">In&nbsp;[25]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="n">transcript_2_clean</span><span class="p">[</span><span class="s1">&#39;time&#39;</span><span class="p">]</span><span class="o">=</span><span class="n">transcript_2_clean</span><span class="p">[</span><span class="s1">&#39;time&#39;</span><span class="p">]</span><span class="o">/</span><span class="mf">24.0</span>
@@ -15096,7 +15080,7 @@ The number of data in updated &#39;offer_id&#39; is 148805 == 116361+32444
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[28]:</div>
+<div class="prompt input_prompt">In&nbsp;[26]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="n">transcript_cleaned</span> <span class="o">=</span> <span class="n">transcript_2_clean</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
@@ -15113,7 +15097,7 @@ The number of data in updated &#39;offer_id&#39; is 148805 == 116361+32444
 
 <div class="output_area">
 
-    <div class="prompt output_prompt">Out[28]:</div>
+    <div class="prompt output_prompt">Out[26]:</div>
 
 
 
@@ -15258,7 +15242,7 @@ The number of data in updated &#39;offer_id&#39; is 148805 == 116361+32444
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[29]:</div>
+<div class="prompt input_prompt">In&nbsp;[27]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="c1"># replace column &#39;id&#39; with the unite column name &#39;offer_id&#39;</span>
@@ -15272,15 +15256,13 @@ The number of data in updated &#39;offer_id&#39; is 148805 == 116361+32444
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[30]:</div>
+<div class="prompt input_prompt">In&nbsp;[28]:</div>
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="c1"># Merge transcript_cleaned with details of &#39;offer_id&#39; in portfolio_cleaned </span>
+<div class=" highlight hl-ipython3"><pre><span></span><span class="c1"># Merge transcript_cleaned on &#39;offer_id&#39; in portfolio_cleaned </span>
 <span class="n">transcript_offer</span> <span class="o">=</span> <span class="n">transcript_cleaned</span><span class="o">.</span><span class="n">merge</span><span class="p">(</span><span class="n">portfolio_cleaned</span><span class="p">[[</span><span class="s1">&#39;duration&#39;</span><span class="p">,</span><span class="s1">&#39;offer_id&#39;</span><span class="p">,</span><span class="s1">&#39;offer_type&#39;</span><span class="p">]],</span> <span class="n">how</span><span class="o">=</span><span class="s1">&#39;left&#39;</span><span class="p">,</span> <span class="n">on</span><span class="o">=</span><span class="s1">&#39;offer_id&#39;</span><span class="p">)</span>
 
 <span class="n">transcript_offer</span> <span class="o">=</span> <span class="n">transcript_offer</span><span class="o">.</span><span class="n">astype</span><span class="p">({</span><span class="s1">&#39;offer_id&#39;</span><span class="p">:</span> <span class="s1">&#39;str&#39;</span><span class="p">})</span>
-<span class="c1">#transcript_offer = transcript_offer.astype({&#39;person&#39;: &#39;int&#39;}).astype({&#39;person&#39;: &#39;object&#39;})</span>
-
 <span class="n">transcript_offer</span>
 </pre></div>
 
@@ -15294,7 +15276,7 @@ The number of data in updated &#39;offer_id&#39; is 148805 == 116361+32444
 
 <div class="output_area">
 
-    <div class="prompt output_prompt">Out[30]:</div>
+    <div class="prompt output_prompt">Out[28]:</div>
 
 
 
@@ -15460,8 +15442,8 @@ The number of data in updated &#39;offer_id&#39; is 148805 == 116361+32444
 <div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
 </div><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<div class="highlight"><pre><span></span><span class="n">profile_cleaned</span><span class="o">.</span><span class="n">to_csv</span><span class="p">(</span><span class="s1">&#39;./data_generated/cleaned_profile.csv&#39;</span><span class="p">)</span> <span class="c1">#如果与index不相关的表格 可以设置index=False</span>
-<span class="n">portfolio_cleaned</span><span class="o">.</span><span class="n">to_csv</span><span class="p">(</span><span class="s1">&#39;./data_generated/cleaned_portfolio.csv&#39;</span><span class="p">)</span>
+<div class="highlight"><pre><span></span><span class="n">profile_cleaned</span><span class="o">.</span><span class="n">to_csv</span><span class="p">(</span><span class="s1">&#39;./data_generated/profile_cleaned.csv&#39;</span><span class="p">,</span> <span class="n">index</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span> <span class="c1"># if index useless, set index=False</span>
+<span class="n">portfolio_cleaned</span><span class="o">.</span><span class="n">to_csv</span><span class="p">(</span><span class="s1">&#39;./data_generated/portfolio_cleaned.csv&#39;</span><span class="p">,</span> <span class="n">index</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
 </pre></div>
 
 </div>
@@ -15470,9 +15452,9 @@ The number of data in updated &#39;offer_id&#39; is 148805 == 116361+32444
 <div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
 </div><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<h1 id="III.-[Data-Preprocessing](#Start)"><a class="anchor" id="3">III. [Data Preprocessing](#Start)</a><a class="anchor-link" href="#III.-[Data-Preprocessing](#Start)">&#182;</a></h1><p>Follow program flow chart:
+<h1 id="III.-[Data-Preprocessing](#Start)"><a class="anchor" id="3">III. [Data Preprocessing](#Start)</a><a class="anchor-link" href="#III.-[Data-Preprocessing](#Start)">&#182;</a></h1><p>The data preprocessing follows the program flow chart below:
 <img src="./images/flow_chart.jpg"/>
-We get two ideal dataset:
+We get two ideal datasets:
 I. target_dataset
 <img src="./images/target_dataset.png"/></p>
 <ol>
@@ -15495,16 +15477,25 @@ I. target_dataset
 <li><strong>Values</strong>: <code>NaN</code> represent not viewed</li>
 </ul>
 </li>
-<li><code>time_transaction</code> (object of str)<ul>
+<li><p><code>time_transaction</code> (object of str)</p>
+<ul>
 <li>time of the transactions within an transaction unit(within one unique offer_id of one person, there may be more transaction units)</li>
 <li><strong>Values</strong>: there maybe more than one transactions within a transaction unit, so use <code>str</code>(obeject) to represent<ul>
+<li>for offer is informational(offer_id is 2 or 7)<ul>
+<li>there is only one value(float): None or the first transaction time</li>
+</ul>
+</li>
+<li>for other offers<ul>
 <li><code>''</code> means there is no transaction</li>
-<li><code>',3.8,5.9'</code> means there is two transactions, one is at time 3.8, another in at time 5.9</li>
+<li><code>',3.8,5.9'</code> means there is two transactions, one is at time 3.8, another in at time 5.9 </li>
 </ul>
 </li>
 </ul>
 </li>
-<li><code>time_completed</code> (float)<ul>
+</ul>
+</li>
+<li><p><code>time_completed</code> (float)</p>
+<ul>
 <li>time of complete the offer</li>
 <li><strong>Values</strong>: <code>NaN</code> represent not completed</li>
 </ul>
@@ -15544,13 +15535,7 @@ I. target_dataset
 <div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
 </div><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<p>II. transcript_offer(finally updated)<br></p>
-<div class="highlight"><pre><span></span><span class="c1">### Code</span>
-<span class="c1"># Just show the updated part:</span>
-<span class="n">normal_offer_id</span> <span class="o">=</span> <span class="n">target_dataset</span><span class="o">.</span><span class="n">offer_id</span><span class="o">.</span><span class="n">unique</span><span class="p">()</span><span class="o">.</span><span class="n">tolist</span><span class="p">()</span>   <span class="c1"># [&#39;0&#39;,&#39;1&#39;,&#39;2&#39;,&#39;3&#39;,&#39;4&#39;,&#39;5&#39;,&#39;6&#39;,&#39;7&#39;,&#39;8&#39;,&#39;9&#39;]</span>
-<span class="c1"># show transaction, the offer_id is not normal(some has been updated by wrangling)</span>
-<span class="n">transcript_offer</span><span class="p">[</span><span class="o">~</span><span class="n">transcript_offer</span><span class="o">.</span><span class="n">offer_id</span><span class="o">.</span><span class="n">isin</span><span class="p">(</span><span class="n">normal_offer_id</span><span class="p">)]</span><span class="o">.</span><span class="n">tail</span><span class="p">(</span><span class="mi">20</span><span class="p">)</span>
-</pre></div>
+<p>II. transcript_offer(final updated version)<br></p>
 <p><img src="./images/transcript_offer.png"/>
 most are the same as the original dataset, just some values in column 'offer_id' are updated <br>
 in figure, the value '6,5' represent:<br>
@@ -15562,16 +15547,16 @@ in figure, the value '6,5' represent:<br>
 <div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
 </div><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<h2 id="3.1.-[Wrangle-Data](#Start)"><a class="anchor" id="3.1">3.1. [Wrangle Data](#Start)</a><a class="anchor-link" href="#3.1.-[Wrangle-Data](#Start)">&#182;</a></h2><p><strong>Goal</strong>: get two dataset</p>
+<h2 id="3.1.-[Wrangle-Data](#Start)"><a class="anchor" id="3.1">3.1. [Wrangle Data](#Start)</a><a class="anchor-link" href="#3.1.-[Wrangle-Data](#Start)">&#182;</a></h2><p><strong>Goal</strong>: two datasets</p>
 <ol>
 <li>Ideal target_dataset <ul>
 <li>initial a target_dataset_list</li>
 <li>append list with constructed dicts</li>
-<li>change target_dataset_list to DataFrame target_dataset</li>
+<li>change target_dataset_list to target_dataset DataFrame</li>
 </ul>
 </li>
 <li>Update transcript_offer<ul>
-<li>Update the offer_id infos of transactions with the related offer_id in original dataset transcript_offer</li>
+<li>Update the offer_id infos</li>
 </ul>
 </li>
 </ol>
@@ -15581,17 +15566,16 @@ in figure, the value '6,5' represent:<br>
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[31]:</div>
+<div class="prompt input_prompt">In&nbsp;[29]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="c1"># prepare two dataset to wrangle</span>
 
-<span class="c1"># 1. target_dataset_list </span>
+<span class="c1"># 1. target_dataset </span>
 <span class="n">target_dataset_list</span> <span class="o">=</span> <span class="p">[]</span>
-<span class="c1"># pd.DataFrame(columns=[&#39;person&#39;, &#39;offer_id&#39;, &#39;time_received&#39;, &#39;time_viewed&#39;, &#39;time_transaction&#39;,&#39;time_completed&#39;,&#39;amount_with_offer&#39;,&#39;label_effective_offer&#39;])</span>
 
 <span class="c1"># 2. transcript_offer</span>
-<span class="n">transcript_offer</span> <span class="c1"># already existed</span>
+<span class="n">transcript_offer</span> <span class="c1"># already existed: the &#39;offer_id&#39; should be &#39;obeject of str&#39;</span>
 </pre></div>
 
     </div>
@@ -15604,7 +15588,7 @@ in figure, the value '6,5' represent:<br>
 
 <div class="output_area">
 
-    <div class="prompt output_prompt">Out[31]:</div>
+    <div class="prompt output_prompt">Out[29]:</div>
 
 
 
@@ -15764,8 +15748,7 @@ in figure, the value '6,5' represent:<br>
 <div class="text_cell_render border-box-sizing rendered_html">
 <h1 id="!!!Attention:-The-Wrangling-takes-more-than-2-hours...">!!!Attention: The Wrangling takes more than 2 hours...<a class="anchor-link" href="#!!!Attention:-The-Wrangling-takes-more-than-2-hours...">&#182;</a></h1><ul>
 <li>The source code for Wrangling are .py files in project<ul>
-<li>class: <code>data_preprocessing_class.py</code></li>
-<li>functions: <code>data_preprocessing_funcs.py</code></li>
+<li>With Class: <code>data_preprocessing_class.py</code></li>
 </ul>
 </li>
 </ul>
@@ -15776,7 +15759,7 @@ in figure, the value '6,5' represent:<br>
 <div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
 </div><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<h3 id="[Method.1-Using-a-moduled-class](#Start)"><a class="anchor" id="Method-1-wrangle">[Method.1 Using a moduled class](#Start)</a><a class="anchor-link" href="#[Method.1-Using-a-moduled-class](#Start)">&#182;</a></h3><ul>
+<h3 id="[Mehod:-Using-a-moduled-class](#Start)"><a class="anchor" id="Method-1-wrangle">[Mehod: Using a moduled class](#Start)</a><a class="anchor-link" href="#[Mehod:-Using-a-moduled-class](#Start)">&#182;</a></h3><ul>
 <li><p>in <code>data_preprocessing_class.py</code> <br></p>
 <div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">data_preprocessing_class</span> <span class="kn">import</span> <span class="n">DataPreprocessing</span>
 </pre></div>
@@ -15791,7 +15774,22 @@ in figure, the value '6,5' represent:<br>
 <div class="prompt input_prompt">In&nbsp;[&nbsp;]:</div>
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="c1"># import the class from python files</span>
+<div class=" highlight hl-ipython3"><pre><span></span><span class="o">%</span><span class="k">load_ext</span> autoreload
+<span class="o">%</span><span class="k">autoreload</span> 1
+<span class="o">%</span><span class="k">aimport</span> data_preprocessing_class
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[30]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="c1"># import the Class </span>
 <span class="kn">from</span> <span class="nn">data_preprocessing_class</span> <span class="kn">import</span> <span class="n">PreprocessingData</span>
 </pre></div>
 
@@ -15802,671 +15800,47 @@ in figure, the value '6,5' represent:<br>
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[&nbsp;]:</div>
+<div class="prompt input_prompt">In&nbsp;[31]:</div>
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="n">data_process</span> <span class="o">=</span> <span class="n">PreprocessingData</span><span class="p">(</span><span class="n">target_dataset_list</span><span class="p">,</span> <span class="n">transcript_offer</span><span class="p">)</span>
+<div class=" highlight hl-ipython3"><pre><span></span><span class="c1"># init the Class</span>
+<span class="n">data_process</span> <span class="o">=</span> <span class="n">PreprocessingData</span><span class="p">(</span><span class="n">target_dataset_list</span><span class="p">,</span> <span class="n">transcript_offer</span><span class="p">)</span>
 </pre></div>
 
     </div>
 </div>
 </div>
 
-</div>
-<div class="cell border-box-sizing code_cell rendered">
-<div class="input">
-<div class="prompt input_prompt">In&nbsp;[&nbsp;]:</div>
-<div class="inner_cell">
-    <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="c1"># get the unique_person list</span>
-<span class="n">person_ids</span> <span class="o">=</span> <span class="n">transcript_offer</span><span class="o">.</span><span class="n">person</span><span class="o">.</span><span class="n">unique</span><span class="p">()</span>
-<span class="k">for</span> <span class="n">person_id</span> <span class="ow">in</span> <span class="n">person_ids</span><span class="p">:</span>
-    <span class="c1"># transcript for unique_person</span>
-    <span class="n">unique_person</span> <span class="o">=</span> <span class="n">transcript_offer</span><span class="p">[</span><span class="n">transcript_offer</span><span class="p">[</span><span class="s1">&#39;person&#39;</span><span class="p">]</span><span class="o">==</span><span class="n">person_id</span><span class="p">]</span>
-    <span class="c1"># all transactions of unique_person</span>
-    <span class="n">transactions</span> <span class="o">=</span> <span class="n">unique_person</span><span class="p">[</span><span class="n">unique_person</span><span class="o">.</span><span class="n">event</span><span class="o">==</span><span class="s1">&#39;transaction&#39;</span><span class="p">]</span>
-    
-    <span class="c1"># get groupby object according to &#39;offer_id&#39; of a unique_person</span>
-    <span class="n">groupby_offer_id</span> <span class="o">=</span> <span class="n">unique_person</span><span class="o">.</span><span class="n">groupby</span><span class="p">([</span><span class="s1">&#39;offer_id&#39;</span><span class="p">])</span>
-    <span class="n">offer_id_list</span> <span class="o">=</span> <span class="n">unique_person</span><span class="o">.</span><span class="n">offer_id</span><span class="o">.</span><span class="n">unique</span><span class="p">()</span>
-    
-    <span class="c1"># update target_data_list and transcript_offer</span>
-    <span class="n">data_process</span><span class="o">.</span><span class="n">get_dateset_from_unique_offer_id</span><span class="p">(</span><span class="n">groupby_offer_id</span><span class="p">,</span> <span class="n">offer_id_list</span><span class="p">,</span> <span class="n">transactions</span><span class="p">)</span>
-</pre></div>
-
-    </div>
-</div>
-</div>
-
-</div>
-<div class="cell border-box-sizing code_cell rendered">
-<div class="input">
-<div class="prompt input_prompt">In&nbsp;[&nbsp;]:</div>
-<div class="inner_cell">
-    <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="c1"># change target_dataset_list(list of dicts) to DataFrame</span>
-<span class="n">target_dataset</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">data_process</span><span class="o">.</span><span class="n">target_dataset_list</span><span class="p">,</span> 
-                              <span class="n">columns</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;person&#39;</span><span class="p">,</span> <span class="s1">&#39;offer_id&#39;</span><span class="p">,</span> <span class="s1">&#39;time_received&#39;</span><span class="p">,</span> <span class="s1">&#39;time_viewed&#39;</span><span class="p">,</span> <span class="s1">&#39;time_transaction&#39;</span><span class="p">,</span><span class="s1">&#39;time_completed&#39;</span><span class="p">,</span><span class="s1">&#39;amount_with_offer&#39;</span><span class="p">,</span><span class="s1">&#39;label_effective_offer&#39;</span><span class="p">])</span>
-<span class="c1"># update transcript_offer</span>
-<span class="n">transcript_offer</span> <span class="o">=</span> <span class="n">data_process</span><span class="o">.</span><span class="n">transcript_offer</span>
-</pre></div>
-
-    </div>
-</div>
-</div>
-
-</div>
-<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
-</div><div class="inner_cell">
-<div class="text_cell_render border-box-sizing rendered_html">
-<h3 id="[Method.2-Based-on-following-functions](#Start)-(better-for-debugging)"><a class="anchor" id="Method-2-wrangle">[Method.2 Based on following functions](#Start) (better for debugging)</a><a class="anchor-link" href="#[Method.2-Based-on-following-functions](#Start)-(better-for-debugging)">&#182;</a></h3><ul>
-<li>in <code>data_preprocessing_funcs.py</code><ul>
-<li>get_dateset_from_unique_offer_id(groupby_offer_id, offer_id_list, transactions) -&gt; None</li>
-<li>fill_offer_id_4_transaction(original_id, updated_id) -&gt; lst</li>
-<li>get_dateset_from_informational_offer(df_units, units_count, transactions) -&gt; None</li>
-<li>get_dateset_from_other_offer(df_units, units_count, transactions) -&gt; None</li>
-<li>cut_unique_offer_id_2_units(unique_offer_id) -&gt; df_units, units_count</li>
-</ul>
-</li>
-</ul>
-
-</div>
-</div>
-</div>
-<div class="cell border-box-sizing code_cell rendered">
-<div class="input">
-<div class="prompt input_prompt">In&nbsp;[&nbsp;]:</div>
-<div class="inner_cell">
-    <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="k">def</span> <span class="nf">get_dateset_from_unique_offer_id</span><span class="p">(</span><span class="n">groupby_offer_id</span><span class="p">,</span> <span class="n">offer_id_list</span><span class="p">,</span> <span class="n">transactions</span><span class="p">):</span>
-    <span class="sd">&#39;&#39;&#39;</span>
-<span class="sd">    DESCRIPTION:</span>
-<span class="sd">    Based on unique_offer_id of unique_person update the following dataset:</span>
-
-<span class="sd">    Update transactions with related offer_id in the original dataset transcript_offer.</span>
-
-<span class="sd">    Update target_dataset_list - (list), the structure of target_dataset_list element is a dict with keys</span>
-<span class="sd">        &#39;person&#39;, &#39;offer_id&#39;, &#39;time_received&#39;, &#39;time_viewed&#39;, &#39;time_transaction&#39;,&#39;time_completed&#39;,&#39;amount_with_offer&#39;,&#39;label_effective_offer&#39;</span>
-
-<span class="sd">    INPUT:</span>
-<span class="sd">        groupby_offer_id - (pandas groupby object) groupby offer_id of get_dateset_from_unique_person</span>
-<span class="sd">        offer_id_list - (list) offer_id list with unique values of unique person</span>
-<span class="sd">        transactions - (DataFrame) all transactions of a unique person</span>
-
-<span class="sd">    OUTPUT: None</span>
-<span class="sd">    &#39;&#39;&#39;</span>
-    <span class="n">start</span> <span class="o">=</span> <span class="n">time</span><span class="p">()</span>
-
-    <span class="n">valid_offer_id</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;0&#39;</span><span class="p">,</span> <span class="s1">&#39;1&#39;</span><span class="p">,</span> <span class="s1">&#39;2&#39;</span><span class="p">,</span> <span class="s1">&#39;3&#39;</span><span class="p">,</span> <span class="s1">&#39;4&#39;</span><span class="p">,</span> <span class="s1">&#39;5&#39;</span><span class="p">,</span> <span class="s1">&#39;6&#39;</span><span class="p">,</span> <span class="s1">&#39;7&#39;</span><span class="p">,</span> <span class="s1">&#39;8&#39;</span><span class="p">,</span> <span class="s1">&#39;9&#39;</span><span class="p">]</span>
-    <span class="k">for</span> <span class="n">offer_id</span> <span class="ow">in</span> <span class="n">offer_id_list</span><span class="p">:</span>
-        <span class="c1"># offer_id has 10 valid values, except -1 represent nan values of offer_id</span>
-        <span class="k">if</span> <span class="n">offer_id</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">valid_offer_id</span><span class="p">:</span>
-            <span class="k">continue</span>
-        <span class="n">unique_offer_id</span> <span class="o">=</span> <span class="n">groupby_offer_id</span><span class="o">.</span><span class="n">get_group</span><span class="p">(</span><span class="n">offer_id</span><span class="p">)</span>
-        <span class="n">df_units</span><span class="p">,</span> <span class="n">units_count</span> <span class="o">=</span> <span class="n">cut_unique_offer_id_2_units</span><span class="p">(</span><span class="n">unique_offer_id</span><span class="p">)</span>
-
-        <span class="c1"># informational offer_type without &#39;offer completed&#39;</span>
-        <span class="k">if</span> <span class="n">unique_offer_id</span><span class="o">.</span><span class="n">offer_type</span><span class="o">.</span><span class="n">unique</span><span class="p">()[</span><span class="mi">0</span><span class="p">]</span> <span class="o">==</span> <span class="s1">&#39;informational&#39;</span><span class="p">:</span>
-            <span class="n">get_dateset_from_informational_offer</span><span class="p">(</span><span class="n">df_units</span><span class="p">,</span> <span class="n">units_count</span><span class="p">,</span> <span class="n">transactions</span><span class="p">)</span>
-
-        <span class="k">else</span><span class="p">:</span>
-        <span class="c1">#unique_offer_id.offer_type.unique()[0] in [&#39;bogo&#39;, &#39;discount&#39;]:</span>
-            <span class="n">get_dateset_from_other_offer</span><span class="p">(</span><span class="n">df_units</span><span class="p">,</span> <span class="n">units_count</span><span class="p">,</span> <span class="n">transactions</span><span class="p">)</span>
-        <span class="c1">#print(&quot;data for unique offer_id wrangled, time is {}&quot; .format(time()-start))</span>
-    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;data for unique person wrangled, time is </span><span class="si">{}</span><span class="s2">&quot;</span> <span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">time</span><span class="p">()</span><span class="o">-</span><span class="n">start</span><span class="p">))</span>
-</pre></div>
-
-    </div>
-</div>
-</div>
-
-</div>
-<div class="cell border-box-sizing code_cell rendered">
-<div class="input">
-<div class="prompt input_prompt">In&nbsp;[&nbsp;]:</div>
-<div class="inner_cell">
-    <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="k">def</span> <span class="nf">fill_offer_id_4_transaction</span><span class="p">(</span><span class="n">original_id</span><span class="p">,</span> <span class="n">updated_id</span><span class="p">):</span>
-    <span class="sd">&#39;&#39;&#39;Filling the offer_id for transactions, if they are related with an offer.</span>
-<span class="sd">    Final result is &#39;-1&#39; or a list: [offer_id_1, offer_id_2,...]</span>
-
-<span class="sd">    INPUT:</span>
-<span class="sd">        original_id - (str) original is &#39;-1&#39;; after updated maybe a str with more values but separated with &#39;,&#39; (because there will be more than one transaction related with an offer)</span>
-<span class="sd">        updated_id - (int) represent the related offer_id</span>
-
-<span class="sd">    OUTPUT:</span>
-<span class="sd">        new_value - (str) updated offer_id infomation of transactions</span>
-<span class="sd">    &#39;&#39;&#39;</span>
-    <span class="k">if</span> <span class="n">original_id</span> <span class="o">==</span> <span class="s1">&#39;-1&#39;</span><span class="p">:</span>  <span class="c1">#obejct(astype(&#39;str&#39;)): str &#39;-1&#39;</span>
-        <span class="n">new_value</span> <span class="o">=</span> <span class="n">updated_id</span>
-    <span class="k">else</span><span class="p">:</span>
-        <span class="c1"># there is already at least one valid transaction related with an offer</span>
-        <span class="n">new_value</span> <span class="o">=</span> <span class="n">original_id</span><span class="o">+</span><span class="s1">&#39;,&#39;</span><span class="o">+</span><span class="n">updated_id</span>
-    <span class="k">return</span> <span class="n">new_value</span>
-</pre></div>
-
-    </div>
-</div>
-</div>
-
-</div>
-<div class="cell border-box-sizing code_cell rendered">
-<div class="input">
-<div class="prompt input_prompt">In&nbsp;[&nbsp;]:</div>
-<div class="inner_cell">
-    <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="k">def</span> <span class="nf">get_dateset_from_informational_offer</span><span class="p">(</span><span class="n">df_units</span><span class="p">,</span> <span class="n">units_count</span><span class="p">,</span> <span class="n">transactions</span><span class="p">):</span>
-    <span class="c1"># target_dataset and transcript_offer are global variables.</span>
-    <span class="sd">&#39;&#39;&#39;</span>
-<span class="sd">    DESCRIPTION:</span>
-<span class="sd">    For the offer_id == 2 | 7 (informational_offer)</span>
-
-<span class="sd">    Update transactions with related offer_id in the original dataset transcript_offer.</span>
-
-<span class="sd">    Update target_dataset_list - (list), the structure of target_dataset_list is list of dicts with following keys:</span>
-<span class="sd">        &#39;person&#39;, &#39;offer_id&#39;, &#39;time_received&#39;, &#39;time_viewed&#39;, &#39;time_transaction&#39;,&#39;time_completed&#39;,&#39;amount_with_offer&#39;,&#39;label_effective_offer&#39;</span>
-
-<span class="sd">    INPUT:</span>
-<span class="sd">        df_units - (list of DataFrame) transaction units from a unique_offer_id of unique_person</span>
-<span class="sd">        units_count - (int) number of transaction units in df_units</span>
-<span class="sd">        transactions - (DataFrame) &#39;event&#39; is &#39;transaction&#39; for a unique_person</span>
-
-<span class="sd">    OUTPUT: None</span>
-<span class="sd">    &#39;&#39;&#39;</span>
-    <span class="c1">#!!!REMEMBER: it&#39;s already units, with &#39;offer received&#39; or not</span>
-    <span class="c1">#!!!REMEMBER: units_count can&#39;t be 0, since there is no nan in &#39;event&#39;</span>
-    <span class="n">person</span>   <span class="o">=</span> <span class="n">df_units</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">person</span><span class="o">.</span><span class="n">unique</span><span class="p">()[</span><span class="mi">0</span><span class="p">]</span>  <span class="c1">#.unique() returns a numpy.array</span>
-    <span class="n">offer_id</span> <span class="o">=</span> <span class="n">df_units</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">offer_id</span><span class="o">.</span><span class="n">unique</span><span class="p">()[</span><span class="mi">0</span><span class="p">]</span>
-    <span class="c1"># different offer_id has a different valid duration</span>
-    <span class="n">duration</span> <span class="o">=</span> <span class="n">df_units</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">duration</span><span class="o">.</span><span class="n">unique</span><span class="p">()[</span><span class="mi">0</span><span class="p">]</span>
-
-    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">units_count</span><span class="p">):</span>
-        <span class="n">df_unit</span> <span class="o">=</span> <span class="n">df_units</span><span class="p">[</span><span class="n">i</span><span class="p">]</span>
-
-        <span class="n">time_received</span> <span class="o">=</span> <span class="n">df_unit</span><span class="p">[</span><span class="n">df_unit</span><span class="o">.</span><span class="n">event</span><span class="o">==</span><span class="s1">&#39;offer received&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">time</span><span class="o">.</span><span class="n">min</span><span class="p">()</span>
-        <span class="n">time_viewed</span> <span class="o">=</span> <span class="n">df_unit</span><span class="p">[</span><span class="n">df_unit</span><span class="o">.</span><span class="n">event</span><span class="o">==</span><span class="s1">&#39;offer viewed&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">time</span><span class="o">.</span><span class="n">min</span><span class="p">()</span>
-        <span class="n">time_completed</span> <span class="o">=</span> <span class="n">df_unit</span><span class="p">[</span><span class="n">df_unit</span><span class="o">.</span><span class="n">event</span><span class="o">==</span><span class="s1">&#39;offer completed&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">time</span><span class="o">.</span><span class="n">min</span><span class="p">()</span>
-
-        <span class="c1"># init the transaction time</span>
-        <span class="c1"># (after a valid transaction, the offer is finished, so there will be at most one transaction time)</span>
-        <span class="n">time_transaction</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span>
-        <span class="c1"># init the amount related to an offer</span>
-        <span class="n">amount_with_offer</span> <span class="o">=</span> <span class="mi">0</span>
-        <span class="c1"># init the label of effective_offer</span>
-        <span class="n">label_effective_offer</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span>
-
-        <span class="c1"># FLAG of &#39;offer received&#39;</span>
-        <span class="n">is_received</span> <span class="o">=</span> <span class="p">(</span><span class="n">df_unit</span><span class="p">[</span><span class="n">df_unit</span><span class="o">.</span><span class="n">event</span><span class="o">==</span><span class="s1">&#39;offer received&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">!=</span><span class="mi">0</span><span class="p">)</span>
-
-        <span class="k">if</span> <span class="n">is_received</span><span class="p">:</span>
-            <span class="c1"># at least one transaction exist</span>
-            <span class="k">if</span> <span class="n">transactions</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">:</span>
-                <span class="n">transaction_time</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">transactions</span><span class="o">.</span><span class="n">time</span><span class="p">)</span>
-                <span class="n">time_begin</span> <span class="o">=</span> <span class="n">time_received</span>
-                <span class="n">time_end</span> <span class="o">=</span> <span class="n">time_received</span> <span class="o">+</span> <span class="n">duration</span>
-
-                <span class="n">is_valid_duration</span> <span class="o">=</span> <span class="p">(</span><span class="n">transaction_time</span> <span class="o">&gt;=</span> <span class="n">time_begin</span><span class="p">)</span> <span class="o">&amp;</span> <span class="p">(</span><span class="n">transaction_time</span> <span class="o">&lt;=</span> <span class="n">time_end</span><span class="p">)</span>
-                <span class="n">valid_transactions</span> <span class="o">=</span> <span class="n">transactions</span><span class="p">[</span><span class="n">is_valid_duration</span><span class="p">]</span>
-
-                <span class="c1"># update the 1st transaction, get the label_effective_offer</span>
-                <span class="k">if</span> <span class="n">valid_transactions</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">:</span>
-                    <span class="c1"># the 1st transaction is the valid transaction related with an offer</span>
-                    <span class="n">valid_transactions</span><span class="o">.</span><span class="n">head</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span><span class="o">.</span><span class="n">loc</span><span class="p">[:,</span> <span class="s1">&#39;offer_id&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">offer_id</span>
-                    <span class="n">time_transaction</span> <span class="o">=</span> <span class="n">valid_transactions</span><span class="o">.</span><span class="n">head</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span><span class="o">.</span><span class="n">time</span><span class="o">.</span><span class="n">min</span><span class="p">()</span>
-                    
-                    <span class="c1"># update time_completed with the 1st valid transaction</span>
-                    <span class="c1"># !!!Attention: type of time_transaction is &#39;str&#39;</span>
-                    <span class="n">time_completed</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">time_transaction</span><span class="p">)</span>
-
-                    <span class="c1"># get the data in original dataset transcript_offer, to update the offer_id of transaction with the related offer_id</span>
-                    <span class="k">global</span> <span class="n">transcript_offer</span>
-                    <span class="n">valid_transactions_2b_labeled</span> <span class="o">=</span> <span class="n">transcript_offer</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">valid_transactions</span><span class="o">.</span><span class="n">index</span><span class="p">]</span>
-
-                    <span class="c1"># update the offer_id of transaction in transcript_offer</span>
-                    <span class="n">valid_transactions_2b_labeled</span><span class="p">[</span><span class="s1">&#39;offer_id&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">valid_transactions_2b_labeled</span><span class="p">[</span><span class="s1">&#39;offer_id&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="n">fill_offer_id_4_transaction</span><span class="p">,</span> <span class="n">args</span><span class="o">=</span><span class="p">(</span><span class="n">offer_id</span><span class="p">,))</span>
-                    <span class="n">transcript_offer</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">valid_transactions_2b_labeled</span><span class="p">)</span>
-
-                    <span class="n">label_effective_offer</span> <span class="o">=</span> <span class="mi">1</span>
-                    <span class="n">amount_with_offer</span> <span class="o">=</span> <span class="n">valid_transactions</span><span class="o">.</span><span class="n">head</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span><span class="o">.</span><span class="n">amount</span><span class="o">.</span><span class="n">sum</span><span class="p">()</span>
-                    
-                <span class="c1"># received, person has transaction, but for this offer_id has no valid transaction</span>
-                <span class="k">else</span><span class="p">:</span>
-                    <span class="n">label_effective_offer</span> <span class="o">=</span> <span class="mi">0</span>
-
-            <span class="c1"># received but without transaction</span>
-            <span class="k">else</span><span class="p">:</span>
-                <span class="n">label_effective_offer</span> <span class="o">=</span> <span class="mi">0</span>
-
-        <span class="c1"># update the target_dataset</span>
-        <span class="k">global</span> <span class="n">target_dataset_list</span>
-        <span class="n">target_dict</span> <span class="o">=</span> <span class="p">{</span>
-                    <span class="s2">&quot;person&quot;</span><span class="p">:</span>   <span class="n">person</span><span class="p">,</span>
-                    <span class="s2">&quot;offer_id&quot;</span><span class="p">:</span> <span class="n">offer_id</span><span class="p">,</span>
-                    <span class="s2">&quot;time_received&quot;</span><span class="p">:</span> <span class="n">time_received</span><span class="p">,</span>
-                    <span class="s2">&quot;time_viewed&quot;</span><span class="p">:</span> <span class="n">time_viewed</span><span class="p">,</span>
-                    <span class="s2">&quot;time_transaction&quot;</span><span class="p">:</span> <span class="n">time_transaction</span><span class="p">,</span>
-                    <span class="s2">&quot;time_completed&quot;</span><span class="p">:</span> <span class="n">time_completed</span><span class="p">,</span>
-                    <span class="s2">&quot;amount_with_offer&quot;</span><span class="p">:</span> <span class="n">amount_with_offer</span><span class="p">,</span>
-                    <span class="s2">&quot;label_effective_offer&quot;</span><span class="p">:</span> <span class="n">label_effective_offer</span><span class="p">}</span>
-        <span class="n">target_dataset_list</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">target_dict</span><span class="p">)</span>
-</pre></div>
-
-    </div>
-</div>
-</div>
-
-</div>
-<div class="cell border-box-sizing code_cell rendered">
-<div class="input">
-<div class="prompt input_prompt">In&nbsp;[&nbsp;]:</div>
-<div class="inner_cell">
-    <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="k">def</span> <span class="nf">get_dateset_from_other_offer</span><span class="p">(</span><span class="n">df_units</span><span class="p">,</span> <span class="n">units_count</span><span class="p">,</span> <span class="n">transactions</span><span class="p">):</span>
-    <span class="sd">&#39;&#39;&#39;</span>
-<span class="sd">    DESCRIPTION:</span>
-<span class="sd">    For the offer_id != (2 &amp; 7)</span>
-<span class="sd">    (REMEMBER to exclude offer_id == -1)</span>
-
-<span class="sd">    Update transactions with related offer_id in the original dataset transcript_offer.</span>
-
-<span class="sd">    Update target_dataset_list - (list), the structure of target_dataset_list is list of dicts with following keys:</span>
-<span class="sd">        &#39;person&#39;, &#39;offer_id&#39;, &#39;time_received&#39;, &#39;time_viewed&#39;, &#39;time_transaction&#39;,&#39;time_completed&#39;,&#39;amount_with_offer&#39;,&#39;label_effective_offer&#39;</span>
-
-<span class="sd">    INPUT:</span>
-<span class="sd">        df_units - (list of DataFrame) transaction units from a unique_offer_id of unique_person</span>
-<span class="sd">        units_count - (int) number of transaction units in df_units</span>
-<span class="sd">        transactions - (DataFrame) &#39;event&#39; is &#39;transaction&#39; for a unique_person</span>
-
-<span class="sd">    OUTPUT: None</span>
-<span class="sd">    &#39;&#39;&#39;</span>
-    <span class="c1">#!!!REMEMBER: it&#39;s already units, with &#39;offer received&#39; or not</span>
-    <span class="c1">#!!!REMEMBER: units_count can&#39;t be 0, since there is no nan in &#39;event&#39;</span>
-    <span class="n">person</span>   <span class="o">=</span> <span class="n">df_units</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">person</span><span class="o">.</span><span class="n">unique</span><span class="p">()[</span><span class="mi">0</span><span class="p">]</span>  <span class="c1">#.unique() returns a numpy.array</span>
-    <span class="n">offer_id</span> <span class="o">=</span> <span class="n">df_units</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">offer_id</span><span class="o">.</span><span class="n">unique</span><span class="p">()[</span><span class="mi">0</span><span class="p">]</span>
-    <span class="c1"># different offer_id has a different valid duration</span>
-    <span class="n">duration</span> <span class="o">=</span> <span class="n">df_units</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">duration</span><span class="o">.</span><span class="n">unique</span><span class="p">()[</span><span class="mi">0</span><span class="p">]</span>
-
-    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">units_count</span><span class="p">):</span>
-        <span class="n">df_unit</span> <span class="o">=</span> <span class="n">df_units</span><span class="p">[</span><span class="n">i</span><span class="p">]</span>
-
-        <span class="n">time_received</span> <span class="o">=</span> <span class="n">df_unit</span><span class="p">[</span><span class="n">df_unit</span><span class="o">.</span><span class="n">event</span><span class="o">==</span><span class="s1">&#39;offer received&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">time</span><span class="o">.</span><span class="n">min</span><span class="p">()</span>
-        <span class="n">time_viewed</span> <span class="o">=</span> <span class="n">df_unit</span><span class="p">[</span><span class="n">df_unit</span><span class="o">.</span><span class="n">event</span><span class="o">==</span><span class="s1">&#39;offer viewed&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">time</span><span class="o">.</span><span class="n">min</span><span class="p">()</span>
-        <span class="n">time_completed</span> <span class="o">=</span> <span class="n">df_unit</span><span class="p">[</span><span class="n">df_unit</span><span class="o">.</span><span class="n">event</span><span class="o">==</span><span class="s1">&#39;offer completed&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">time</span><span class="o">.</span><span class="n">min</span><span class="p">()</span>
-
-        <span class="c1"># init the transaction time with a empty list</span>
-        <span class="c1"># (there will be more than one valid transaction time)</span>
-        <span class="n">time_transaction</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>
-        <span class="c1"># init the amount related to an offer</span>
-        <span class="n">amount_with_offer</span> <span class="o">=</span> <span class="mi">0</span>
-        <span class="c1"># init the label of effective_offer</span>
-        <span class="n">label_effective_offer</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span>
-
-        <span class="c1"># FLAG of &#39;offer received&#39;</span>
-        <span class="n">is_received</span> <span class="o">=</span> <span class="p">(</span><span class="n">df_unit</span><span class="p">[</span><span class="n">df_unit</span><span class="o">.</span><span class="n">event</span><span class="o">==</span><span class="s1">&#39;offer received&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">!=</span><span class="mi">0</span><span class="p">)</span>
-        <span class="c1"># FLAG of &#39;offer completed&#39;</span>
-        <span class="n">is_completed</span> <span class="o">=</span> <span class="p">(</span><span class="n">df_unit</span><span class="p">[</span><span class="n">df_unit</span><span class="o">.</span><span class="n">event</span><span class="o">==</span><span class="s1">&#39;offer completed&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">!=</span><span class="mi">0</span><span class="p">)</span>
-
-        <span class="k">if</span> <span class="n">is_received</span><span class="p">:</span>
-            <span class="k">if</span> <span class="n">is_completed</span><span class="p">:</span>
-                <span class="c1">#REMEMBER: to be completed, there must be transaction(s)</span>
-                <span class="n">transaction_time</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">transactions</span><span class="o">.</span><span class="n">time</span><span class="p">)</span>
-
-                <span class="c1">#valid transaction(s) exist between &#39;offer received&#39; and &#39;offer completed&#39;</span>
-                <span class="n">is_valid_duration</span> <span class="o">=</span> <span class="p">(</span><span class="n">transaction_time</span> <span class="o">&gt;=</span> <span class="n">time_received</span><span class="p">)</span> <span class="o">&amp;</span> <span class="p">(</span><span class="n">transaction_time</span> <span class="o">&lt;=</span> <span class="n">time_completed</span><span class="p">)</span>
-                <span class="n">valid_transactions</span> <span class="o">=</span> <span class="n">transactions</span><span class="p">[</span><span class="n">is_valid_duration</span><span class="p">]</span>
-
-                <span class="n">valid_transactions</span><span class="o">.</span><span class="n">loc</span><span class="p">[:,</span> <span class="s1">&#39;offer_id&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">offer_id</span>
-
-                <span class="c1"># get the index of valid transactions, to update offer_id of transactions in the original dataset transcript_offer</span>
-                <span class="c1"># with global declaration to update transcript_offer</span>
-                <span class="k">global</span> <span class="n">transcript_offer</span>
-                <span class="c1"># the transactions valid in duration of offer_id</span>
-                <span class="n">valid_transactions_2b_labeled</span> <span class="o">=</span> <span class="n">transcript_offer</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">valid_transactions</span><span class="o">.</span><span class="n">index</span><span class="p">]</span>
-                <span class="n">valid_transactions_2b_labeled</span><span class="p">[</span><span class="s1">&#39;offer_id&#39;</span><span class="p">]</span><span class="o">=</span><span class="n">valid_transactions_2b_labeled</span><span class="p">[</span><span class="s1">&#39;offer_id&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="n">fill_offer_id_4_transaction</span><span class="p">,</span> <span class="n">args</span><span class="o">=</span><span class="p">(</span><span class="n">offer_id</span><span class="p">,))</span>
-                <span class="n">transcript_offer</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">valid_transactions_2b_labeled</span><span class="p">)</span>
-
-                <span class="c1"># update the label of effective_offer</span>
-                <span class="n">label_effective_offer</span> <span class="o">=</span> <span class="mi">1</span>
-                <span class="c1"># get the amount under an offer_id</span>
-                <span class="n">amount_with_offer</span> <span class="o">=</span> <span class="n">valid_transactions</span><span class="o">.</span><span class="n">amount</span><span class="o">.</span><span class="n">sum</span><span class="p">()</span>
-                <span class="c1"># there may be more than one valid transaction</span>
-                <span class="k">for</span> <span class="n">time</span> <span class="ow">in</span> <span class="n">valid_transactions</span><span class="o">.</span><span class="n">time</span><span class="o">.</span><span class="n">values</span><span class="o">.</span><span class="n">tolist</span><span class="p">():</span>
-                    <span class="n">time_transaction</span> <span class="o">=</span> <span class="n">time_transaction</span><span class="o">+</span><span class="s1">&#39;,&#39;</span><span class="o">+</span><span class="nb">str</span><span class="p">(</span><span class="n">time</span><span class="p">)</span>
-
-
-            <span class="k">else</span><span class="p">:</span>
-                <span class="c1"># without &#39;offer completed&#39;</span>
-                <span class="n">transaction_time</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">transactions</span><span class="o">.</span><span class="n">time</span><span class="p">)</span>
-                <span class="n">time_begin</span> <span class="o">=</span> <span class="n">time_received</span>
-                <span class="n">time_end</span> <span class="o">=</span> <span class="n">time_received</span> <span class="o">+</span> <span class="n">duration</span>
-                <span class="c1"># transaction(s) in valid duration should be regarded as &#39;tried transaction(s)&#39;</span>
-                <span class="n">is_valid_duration</span> <span class="o">=</span> <span class="p">(</span><span class="n">transaction_time</span> <span class="o">&gt;=</span> <span class="n">time_begin</span><span class="p">)</span> <span class="o">&amp;</span> <span class="p">(</span><span class="n">transaction_time</span> <span class="o">&lt;=</span> <span class="n">time_end</span><span class="p">)</span>
-                <span class="n">valid_transactions</span> <span class="o">=</span> <span class="n">transactions</span><span class="p">[</span><span class="n">is_valid_duration</span><span class="p">]</span>
-
-                <span class="c1"># transaction(s) in valid duration should be updated with the related offer_id in the dataset transcript_offer</span>
-
-                <span class="n">valid_transactions</span><span class="o">.</span><span class="n">loc</span><span class="p">[:,</span> <span class="s1">&#39;offer_id&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">offer_id</span>
-                <span class="n">valid_transactions_2b_labeled</span> <span class="o">=</span> <span class="n">transcript_offer</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">valid_transactions</span><span class="o">.</span><span class="n">index</span><span class="p">]</span>
-                <span class="n">valid_transactions_2b_labeled</span><span class="p">[</span><span class="s1">&#39;offer_id&#39;</span><span class="p">]</span><span class="o">=</span><span class="n">valid_transactions_2b_labeled</span><span class="p">[</span><span class="s1">&#39;offer_id&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="n">fill_offer_id_4_transaction</span><span class="p">,</span> <span class="n">args</span><span class="o">=</span><span class="p">(</span><span class="n">offer_id</span><span class="p">,))</span>
-                <span class="n">transcript_offer</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">valid_transactions_2b_labeled</span><span class="p">)</span>
-
-                <span class="n">label_effective_offer</span> <span class="o">=</span> <span class="mi">0</span> <span class="c1"># tried but not completed</span>
-                <span class="n">amount_with_offer</span> <span class="o">=</span> <span class="n">valid_transactions</span><span class="o">.</span><span class="n">amount</span><span class="o">.</span><span class="n">sum</span><span class="p">()</span>
-                <span class="k">for</span> <span class="n">time</span> <span class="ow">in</span> <span class="n">valid_transactions</span><span class="o">.</span><span class="n">time</span><span class="o">.</span><span class="n">values</span><span class="o">.</span><span class="n">tolist</span><span class="p">():</span>
-                    <span class="n">time_transaction</span> <span class="o">=</span> <span class="n">time_transaction</span><span class="o">+</span><span class="s1">&#39;,&#39;</span><span class="o">+</span><span class="nb">str</span><span class="p">(</span><span class="n">time</span><span class="p">)</span>
-
-        <span class="c1"># with global declaration, update target_dataset_list</span>
-        <span class="k">global</span> <span class="n">target_dataset_list</span>
-        <span class="n">target_dict</span> <span class="o">=</span> <span class="p">{</span>
-                    <span class="s2">&quot;person&quot;</span><span class="p">:</span>   <span class="n">person</span><span class="p">,</span>
-                    <span class="s2">&quot;offer_id&quot;</span><span class="p">:</span> <span class="n">offer_id</span><span class="p">,</span>
-                    <span class="s2">&quot;time_received&quot;</span><span class="p">:</span> <span class="n">time_received</span><span class="p">,</span>
-                    <span class="s2">&quot;time_viewed&quot;</span><span class="p">:</span> <span class="n">time_viewed</span><span class="p">,</span>
-                    <span class="s2">&quot;time_transaction&quot;</span><span class="p">:</span> <span class="n">time_transaction</span><span class="p">,</span>
-                    <span class="s2">&quot;time_completed&quot;</span><span class="p">:</span> <span class="n">time_completed</span><span class="p">,</span>
-                    <span class="s2">&quot;amount_with_offer&quot;</span><span class="p">:</span> <span class="n">amount_with_offer</span><span class="p">,</span>
-                    <span class="s2">&quot;label_effective_offer&quot;</span><span class="p">:</span> <span class="n">label_effective_offer</span><span class="p">}</span>
-        <span class="n">target_dataset_list</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">target_dict</span><span class="p">)</span>
-</pre></div>
-
-    </div>
-</div>
-</div>
-
-</div>
-<div class="cell border-box-sizing code_cell rendered">
-<div class="input">
-<div class="prompt input_prompt">In&nbsp;[&nbsp;]:</div>
-<div class="inner_cell">
-    <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="k">def</span> <span class="nf">cut_unique_offer_id_2_units</span><span class="p">(</span><span class="n">unique_offer_id</span><span class="p">):</span>
-    <span class="sd">&#39;&#39;&#39;</span>
-<span class="sd">    DESCRIPTION:</span>
-<span class="sd">        The raw data is transcript of unique_offer_id in one unique_person. Since there may be more than one offer for this unique_offer_id. That&#39;s why we cut the transcript to independent pieces, and call it &#39;units&#39;.</span>
-
-<span class="sd">    INPUT:</span>
-<span class="sd">        unique_offer_id - (DataFrame) transcript of unique_offer_id in one unique_person</span>
-
-<span class="sd">    OUTPUT:</span>
-<span class="sd">        df_units - (list of DataFrame) transaction units from a unique_offer_id of unique_person</span>
-<span class="sd">        units_count - (int) number of transaction units in df_units</span>
-<span class="sd">    &#39;&#39;&#39;</span>
-    <span class="n">events</span> <span class="o">=</span> <span class="n">unique_offer_id</span><span class="p">[</span><span class="s1">&#39;event&#39;</span><span class="p">]</span>
-    <span class="n">index</span> <span class="o">=</span> <span class="n">events</span><span class="o">.</span><span class="n">index</span><span class="o">.</span><span class="n">values</span>
-    <span class="n">index_min</span> <span class="o">=</span> <span class="n">events</span><span class="o">.</span><span class="n">index</span><span class="o">.</span><span class="n">min</span><span class="p">()</span>
-    <span class="n">index_max</span> <span class="o">=</span> <span class="n">events</span><span class="o">.</span><span class="n">index</span><span class="o">.</span><span class="n">max</span><span class="p">()</span>
-    <span class="n">index_received</span> <span class="o">=</span> <span class="n">events</span><span class="p">[</span><span class="n">events</span><span class="o">==</span><span class="s1">&#39;offer received&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">index</span>
-
-    <span class="n">df_units</span> <span class="o">=</span> <span class="p">[]</span>
-    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">index_received</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
-        <span class="n">units_count</span> <span class="o">=</span> <span class="mi">1</span>
-        <span class="n">df_unit</span> <span class="o">=</span> <span class="n">unique_offer_id</span>
-        <span class="n">df_units</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">df_unit</span><span class="p">)</span>
-
-    <span class="k">elif</span> <span class="n">index_received</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">==</span> <span class="n">index_min</span><span class="p">:</span>
-        <span class="n">units_count</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">index_received</span><span class="p">)</span>
-        <span class="c1">#当units_count=1时？？</span>
-        <span class="k">if</span> <span class="n">units_count</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
-            <span class="n">df_unit</span> <span class="o">=</span> <span class="n">unique_offer_id</span>
-            <span class="n">df_units</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">df_unit</span><span class="p">)</span>
-
-        <span class="k">else</span><span class="p">:</span>
-            <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">units_count</span> <span class="o">-</span> <span class="mi">1</span><span class="p">):</span>
-                <span class="n">df_unit</span> <span class="o">=</span> <span class="n">unique_offer_id</span><span class="p">[(</span><span class="n">index</span> <span class="o">&gt;=</span> <span class="n">index_received</span><span class="p">[</span><span class="n">i</span><span class="p">])</span> <span class="o">&amp;</span> <span class="p">(</span><span class="n">index</span> <span class="o">&lt;</span> <span class="n">index_received</span><span class="p">[</span><span class="n">i</span><span class="o">+</span><span class="mi">1</span><span class="p">])]</span>
-                <span class="n">df_units</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">df_unit</span><span class="p">)</span>
-            <span class="n">df_unit</span> <span class="o">=</span> <span class="n">unique_offer_id</span><span class="p">[(</span><span class="n">index</span> <span class="o">&gt;=</span> <span class="n">index_received</span><span class="p">[</span><span class="n">i</span><span class="o">+</span><span class="mi">1</span><span class="p">])</span> <span class="o">&amp;</span> <span class="p">(</span><span class="n">index</span> <span class="o">&lt;=</span> <span class="n">index_max</span><span class="p">)]</span>
-            <span class="n">df_units</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">df_unit</span><span class="p">)</span>
-
-    <span class="k">else</span><span class="p">:</span>
-        <span class="n">units_count</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">index_received</span><span class="p">)</span><span class="o">+</span><span class="mi">1</span>
-        <span class="n">df_unit</span> <span class="o">=</span> <span class="n">unique_offer_id</span><span class="p">[(</span><span class="n">index</span> <span class="o">&gt;=</span> <span class="n">index_min</span><span class="p">)</span> <span class="o">&amp;</span> <span class="p">(</span><span class="n">index</span> <span class="o">&lt;</span> <span class="n">index_received</span><span class="p">[</span><span class="mi">0</span><span class="p">])]</span>
-        <span class="n">df_units</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">df_unit</span><span class="p">)</span>
-        <span class="c1">#当units_count=2时？？</span>
-        <span class="k">if</span> <span class="n">units_count</span> <span class="o">==</span> <span class="mi">2</span><span class="p">:</span>
-            <span class="n">df_unit</span> <span class="o">=</span> <span class="n">unique_offer_id</span><span class="p">[(</span><span class="n">index</span> <span class="o">&gt;=</span> <span class="n">index_received</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span> <span class="o">&amp;</span> <span class="p">(</span><span class="n">index</span> <span class="o">&lt;=</span> <span class="n">index_max</span><span class="p">)]</span>
-            <span class="n">df_units</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">df_unit</span><span class="p">)</span>
-        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">units_count</span> <span class="o">-</span> <span class="mi">1</span><span class="p">):</span>
-            <span class="n">df_unit</span> <span class="o">=</span> <span class="n">unique_offer_id</span><span class="p">[(</span><span class="n">index</span> <span class="o">&gt;=</span> <span class="n">index_received</span><span class="p">[</span><span class="n">i</span><span class="p">])</span> <span class="o">&amp;</span> <span class="p">(</span><span class="n">index</span> <span class="o">&lt;</span> <span class="n">index_received</span><span class="p">[</span><span class="n">i</span><span class="o">+</span><span class="mi">1</span><span class="p">])]</span>
-            <span class="n">df_units</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">df_unit</span><span class="p">)</span>
-        <span class="n">df_unit</span> <span class="o">=</span> <span class="n">unique_offer_id</span><span class="p">[(</span><span class="n">index</span> <span class="o">&gt;=</span> <span class="n">index_received</span><span class="p">[</span><span class="n">i</span><span class="o">+</span><span class="mi">1</span><span class="p">])</span> <span class="o">&amp;</span> <span class="p">(</span><span class="n">index</span> <span class="o">&lt;=</span> <span class="n">index_max</span><span class="p">)]</span>
-        <span class="n">df_units</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">df_unit</span><span class="p">)</span>
-
-    <span class="k">return</span> <span class="n">df_units</span><span class="p">,</span> <span class="n">units_count</span>
-</pre></div>
-
-    </div>
-</div>
-</div>
-
-</div>
-<div class="cell border-box-sizing code_cell rendered">
-<div class="input">
-<div class="prompt input_prompt">In&nbsp;[&nbsp;]:</div>
-<div class="inner_cell">
-    <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="c1"># same process as using class</span>
-<span class="n">person_ids</span> <span class="o">=</span> <span class="n">transcript_offer</span><span class="o">.</span><span class="n">person</span><span class="o">.</span><span class="n">unique</span><span class="p">()</span>
-<span class="k">for</span> <span class="n">person_id</span> <span class="ow">in</span> <span class="n">person_ids</span><span class="p">:</span>
-    <span class="n">unique_person</span> <span class="o">=</span> <span class="n">transcript_offer</span><span class="p">[</span><span class="n">transcript_offer</span><span class="p">[</span><span class="s1">&#39;person&#39;</span><span class="p">]</span><span class="o">==</span><span class="n">person_id</span><span class="p">]</span>
-    <span class="n">transactions</span> <span class="o">=</span> <span class="n">unique_person</span><span class="p">[</span><span class="n">unique_person</span><span class="o">.</span><span class="n">event</span><span class="o">==</span><span class="s1">&#39;transaction&#39;</span><span class="p">]</span>
-
-    <span class="n">groupby_offer_id</span> <span class="o">=</span> <span class="n">unique_person</span><span class="o">.</span><span class="n">groupby</span><span class="p">([</span><span class="s1">&#39;offer_id&#39;</span><span class="p">])</span>
-    <span class="n">offer_id_list</span> <span class="o">=</span> <span class="n">unique_person</span><span class="o">.</span><span class="n">offer_id</span><span class="o">.</span><span class="n">unique</span><span class="p">()</span>
-
-    <span class="n">get_dateset_from_unique_offer_id</span><span class="p">(</span><span class="n">groupby_offer_id</span><span class="p">,</span> <span class="n">offer_id_list</span><span class="p">,</span> <span class="n">transactions</span><span class="p">)</span>
-</pre></div>
-
-    </div>
-</div>
-</div>
-
-</div>
-<div class="cell border-box-sizing code_cell rendered">
-<div class="input">
-<div class="prompt input_prompt">In&nbsp;[&nbsp;]:</div>
-<div class="inner_cell">
-    <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="c1"># change target_dataset_list(list of dicts) to DataFrame</span>
-<span class="n">target_dataset</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">target_dataset_list</span><span class="p">,</span> 
-                              <span class="n">columns</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;person&#39;</span><span class="p">,</span> <span class="s1">&#39;offer_id&#39;</span><span class="p">,</span> <span class="s1">&#39;time_received&#39;</span><span class="p">,</span> <span class="s1">&#39;time_viewed&#39;</span><span class="p">,</span> <span class="s1">&#39;time_transaction&#39;</span><span class="p">,</span><span class="s1">&#39;time_completed&#39;</span><span class="p">,</span><span class="s1">&#39;amount_with_offer&#39;</span><span class="p">,</span><span class="s1">&#39;label_effective_offer&#39;</span><span class="p">])</span>
-<span class="n">transcript_offer</span>  <span class="c1"># already wrangled</span>
-</pre></div>
-
-    </div>
-</div>
-</div>
-
-</div>
-<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
-</div><div class="inner_cell">
-<div class="text_cell_render border-box-sizing rendered_html">
-<div class="highlight"><pre><span></span><span class="c1"># Save the wrangled data</span>
-<span class="n">transcript_offer</span><span class="o">.</span><span class="n">to_csv</span><span class="p">(</span><span class="s1">&#39;./data_generated/wrangled_transcript_offer.csv&#39;</span><span class="p">)</span>
-<span class="n">target_dataset</span><span class="o">.</span><span class="n">to_csv</span><span class="p">(</span><span class="s1">&#39;./data_generated/wrangled_target_dataset.csv&#39;</span><span class="p">)</span>
-</pre></div>
-
-</div>
-</div>
-</div>
-<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
-</div><div class="inner_cell">
-<div class="text_cell_render border-box-sizing rendered_html">
-<h2 id="3.2.-[CHECK-the-wrangled-data](#Start)"><a class="anchor" id="3.2">3.2. [CHECK the wrangled data](#Start)</a><a class="anchor-link" href="#3.2.-[CHECK-the-wrangled-data](#Start)">&#182;</a></h2>
-</div>
-</div>
-</div>
-<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
-</div><div class="inner_cell">
-<div class="text_cell_render border-box-sizing rendered_html">
-<div class="highlight"><pre><span></span><span class="c1">### Alternative: load in the two wrangled dataset</span>
-
-<span class="n">transcript_offer</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="s1">&#39;./data_generated/wrangled_transcript_offer.csv&#39;</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="p">{</span><span class="s1">&#39;person&#39;</span><span class="p">:</span> <span class="nb">int</span><span class="p">})</span>
-<span class="c1"># recover to original dataset: index is the same</span>
-<span class="n">transcript_offer</span><span class="o">.</span><span class="n">index</span> <span class="o">=</span> <span class="n">transcript_offer</span><span class="o">.</span><span class="n">iloc</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">values</span>
-<span class="k">del</span> <span class="n">transcript_offer</span><span class="p">[</span><span class="s1">&#39;Unnamed: 0&#39;</span><span class="p">]</span>
-
-<span class="n">target_dataset</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="s1">&#39;./data_generated/wrangled_target_dataset.csv&#39;</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="p">{</span><span class="s1">&#39;person&#39;</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="s1">&#39;offer_id&#39;</span><span class="p">:</span> <span class="nb">str</span><span class="p">})</span>
-<span class="c1"># recover to original dataset: index is the same</span>
-<span class="n">target_dataset</span><span class="o">.</span><span class="n">index</span> <span class="o">=</span> <span class="n">target_dataset</span><span class="o">.</span><span class="n">iloc</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">values</span>
-<span class="k">del</span> <span class="n">target_dataset</span><span class="p">[</span><span class="s1">&#39;Unnamed: 0&#39;</span><span class="p">]</span>
-</pre></div>
-
-</div>
-</div>
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
 <div class="prompt input_prompt">In&nbsp;[32]:</div>
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="c1">### Alternative: load in the two wrangled dataset</span>
-<span class="n">transcript_offer</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="s1">&#39;./data_generated/wrangled_transcript_offer.csv&#39;</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="p">{</span><span class="s1">&#39;person&#39;</span><span class="p">:</span> <span class="nb">int</span><span class="p">})</span>
-<span class="c1"># recover to original dataset: index is the same</span>
-<span class="n">transcript_offer</span><span class="o">.</span><span class="n">index</span> <span class="o">=</span> <span class="n">transcript_offer</span><span class="o">.</span><span class="n">iloc</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">values</span>
-<span class="k">del</span> <span class="n">transcript_offer</span><span class="p">[</span><span class="s1">&#39;Unnamed: 0&#39;</span><span class="p">]</span>
+<div class=" highlight hl-ipython3"><pre><span></span><span class="c1"># get the unique_person list</span>
+<span class="n">person_ids</span> <span class="o">=</span> <span class="n">transcript_offer</span><span class="o">.</span><span class="n">person</span><span class="o">.</span><span class="n">unique</span><span class="p">()</span>
 
-<span class="n">target_dataset</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="s1">&#39;./data_generated/wrangled_target_dataset.csv&#39;</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="p">{</span><span class="s1">&#39;person&#39;</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="s1">&#39;offer_id&#39;</span><span class="p">:</span> <span class="nb">str</span><span class="p">})</span>
-<span class="c1"># recover to original dataset: index is the same</span>
-<span class="n">target_dataset</span><span class="o">.</span><span class="n">index</span> <span class="o">=</span> <span class="n">target_dataset</span><span class="o">.</span><span class="n">iloc</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">values</span>
-<span class="k">del</span> <span class="n">target_dataset</span><span class="p">[</span><span class="s1">&#39;Unnamed: 0&#39;</span><span class="p">]</span>
-</pre></div>
-
-    </div>
-</div>
-</div>
-
-</div>
-<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
-</div><div class="inner_cell">
-<div class="text_cell_render border-box-sizing rendered_html">
-<h3 id="3.2.1-Basic-information-of-wrangled-data"><code>3.2.1</code> Basic information of wrangled data<a class="anchor-link" href="#3.2.1-Basic-information-of-wrangled-data">&#182;</a></h3>
-</div>
-</div>
-</div>
-<div class="cell border-box-sizing code_cell rendered">
-<div class="input">
-<div class="prompt input_prompt">In&nbsp;[33]:</div>
-<div class="inner_cell">
-    <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="n">target_dataset</span><span class="o">.</span><span class="n">head</span><span class="p">()</span>
-</pre></div>
-
-    </div>
-</div>
-</div>
-
-<div class="output_wrapper">
-<div class="output">
-
-
-<div class="output_area">
-
-    <div class="prompt output_prompt">Out[33]:</div>
-
-
-
-<div class="output_html rendered_html output_subarea output_execute_result">
-<div>
-<style scoped>
-    .dataframe tbody tr th:only-of-type {
-        vertical-align: middle;
-    }
-
-    .dataframe tbody tr th {
-        vertical-align: top;
-    }
-
-    .dataframe thead th {
-        text-align: right;
-    }
-</style>
-<table border="1" class="dataframe">
-  <thead>
-    <tr style="text-align: right;">
-      <th></th>
-      <th>person</th>
-      <th>offer_id</th>
-      <th>time_received</th>
-      <th>time_viewed</th>
-      <th>time_transaction</th>
-      <th>time_completed</th>
-      <th>amount_with_offer</th>
-      <th>label_effective_offer</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <th>0</th>
-      <td>3</td>
-      <td>3</td>
-      <td>0.0</td>
-      <td>0.25</td>
-      <td>,5.5</td>
-      <td>5.50</td>
-      <td>19.89</td>
-      <td>1</td>
-    </tr>
-    <tr>
-      <th>1</th>
-      <td>3</td>
-      <td>7</td>
-      <td>7.0</td>
-      <td>9.00</td>
-      <td>9.25</td>
-      <td>9.25</td>
-      <td>19.67</td>
-      <td>1</td>
-    </tr>
-    <tr>
-      <th>2</th>
-      <td>3</td>
-      <td>0</td>
-      <td>17.0</td>
-      <td>17.00</td>
-      <td>,21.25</td>
-      <td>21.25</td>
-      <td>21.72</td>
-      <td>1</td>
-    </tr>
-    <tr>
-      <th>3</th>
-      <td>3</td>
-      <td>8</td>
-      <td>21.0</td>
-      <td>24.25</td>
-      <td>,21.25</td>
-      <td>21.25</td>
-      <td>21.72</td>
-      <td>1</td>
-    </tr>
-    <tr>
-      <th>4</th>
-      <td>5</td>
-      <td>9</td>
-      <td>0.0</td>
-      <td>0.75</td>
-      <td>NaN</td>
-      <td>NaN</td>
-      <td>0.00</td>
-      <td>0</td>
-    </tr>
-  </tbody>
-</table>
-</div>
-</div>
-
-</div>
-
-</div>
-</div>
-
-</div>
-<div class="cell border-box-sizing code_cell rendered">
-<div class="input">
-<div class="prompt input_prompt">In&nbsp;[34]:</div>
-<div class="inner_cell">
-    <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="n">target_dataset</span><span class="o">.</span><span class="n">info</span><span class="p">()</span>
+<span class="c1"># record the time</span>
+<span class="n">start</span> <span class="o">=</span> <span class="n">time</span><span class="p">()</span>
+<span class="k">for</span> <span class="n">person_id</span> <span class="ow">in</span> <span class="n">person_ids</span><span class="p">:</span>
+    <span class="c1"># transcript for unique_person</span>
+    <span class="n">is_unique_person</span> <span class="o">=</span> <span class="p">(</span><span class="n">transcript_offer</span><span class="p">[</span><span class="s1">&#39;person&#39;</span><span class="p">]</span><span class="o">==</span><span class="n">person_id</span><span class="p">)</span>
+    <span class="n">unique_person</span> <span class="o">=</span> <span class="n">transcript_offer</span><span class="p">[</span><span class="n">is_unique_person</span><span class="p">]</span>
+    
+    <span class="c1"># all transactions of unique_person</span>
+    <span class="n">is_transaction</span> <span class="o">=</span> <span class="p">(</span><span class="n">unique_person</span><span class="o">.</span><span class="n">event</span><span class="o">==</span><span class="s1">&#39;transaction&#39;</span><span class="p">)</span>
+    <span class="n">transactions</span> <span class="o">=</span> <span class="n">unique_person</span><span class="p">[</span><span class="n">is_transaction</span><span class="p">]</span>
+    
+    <span class="c1"># get groupby object according to &#39;offer_id&#39; of a unique_person</span>
+    <span class="n">offer_id_Groupby</span> <span class="o">=</span> <span class="n">unique_person</span><span class="o">.</span><span class="n">groupby</span><span class="p">([</span><span class="s1">&#39;offer_id&#39;</span><span class="p">])</span>
+    
+    <span class="c1"># get list of offer_ids of a unique_person</span>
+    <span class="n">offer_id_list</span> <span class="o">=</span> <span class="n">unique_person</span><span class="o">.</span><span class="n">offer_id</span><span class="o">.</span><span class="n">unique</span><span class="p">()</span>
+    
+    <span class="c1"># update target_data_list and transcript_offer</span>
+    <span class="n">data_process</span><span class="o">.</span><span class="n">construct_data_from_unique_offer_id</span><span class="p">(</span><span class="n">offer_id_Groupby</span><span class="p">,</span> <span class="n">offer_id_list</span><span class="p">,</span> <span class="n">transactions</span><span class="p">)</span>
+<span class="n">end</span> <span class="o">=</span> <span class="n">time</span><span class="p">()</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Data for all person wrangled, time cost: </span><span class="si">{}</span><span class="s2">s&quot;</span> <span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">end</span> <span class="o">-</span> <span class="n">start</span><span class="p">))</span>
 </pre></div>
 
     </div>
@@ -16482,22 +15856,24 @@ in figure, the value '6,5' represent:<br>
     <div class="prompt"></div>
 
 
+<div class="output_subarea output_stream output_stderr output_text">
+<pre>D:\JustPractice\1_MS_Geek_salute\PythonAnaconda\lib\site-packages\pandas\core\indexing.py:965: SettingWithCopyWarning: 
+A value is trying to be set on a copy of a slice from a DataFrame.
+Try using .loc[row_indexer,col_indexer] = value instead
+
+See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
+  self.obj[item] = s
+</pre>
+</div>
+</div>
+
+<div class="output_area">
+
+    <div class="prompt"></div>
+
+
 <div class="output_subarea output_stream output_stdout output_text">
-<pre>&lt;class &#39;pandas.core.frame.DataFrame&#39;&gt;
-Int64Index: 66501 entries, 0 to 66500
-Data columns (total 8 columns):
- #   Column                 Non-Null Count  Dtype  
----  ------                 --------------  -----  
- 0   person                 66501 non-null  int32  
- 1   offer_id               66501 non-null  object 
- 2   time_received          66501 non-null  float64
- 3   time_viewed            49860 non-null  float64
- 4   time_transaction       57747 non-null  object 
- 5   time_completed         40407 non-null  float64
- 6   amount_with_offer      66501 non-null  float64
- 7   label_effective_offer  66501 non-null  int64  
-dtypes: float64(4), int32(1), int64(1), object(2)
-memory usage: 4.3+ MB
+<pre>Data for all person wrangled, time cost: 8481.067322015762s
 </pre>
 </div>
 </div>
@@ -16508,10 +15884,27 @@ memory usage: 4.3+ MB
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
+<div class="prompt input_prompt">In&nbsp;[34]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="c1"># change target_dataset_list(list of dicts) to DataFrame</span>
+<span class="n">target_dataset</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">data_process</span><span class="o">.</span><span class="n">target_dataset_list</span><span class="p">,</span> 
+                              <span class="n">columns</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;person&#39;</span><span class="p">,</span> <span class="s1">&#39;offer_id&#39;</span><span class="p">,</span> <span class="s1">&#39;time_received&#39;</span><span class="p">,</span> <span class="s1">&#39;time_viewed&#39;</span><span class="p">,</span> <span class="s1">&#39;time_transaction&#39;</span><span class="p">,</span><span class="s1">&#39;time_completed&#39;</span><span class="p">,</span><span class="s1">&#39;amount_with_offer&#39;</span><span class="p">,</span><span class="s1">&#39;label_effective_offer&#39;</span><span class="p">])</span>
+<span class="c1"># update transcript_offer</span>
+<span class="n">transcript_offer</span> <span class="o">=</span> <span class="n">data_process</span><span class="o">.</span><span class="n">transcript_offer</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
 <div class="prompt input_prompt">In&nbsp;[35]:</div>
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="n">transcript_offer</span><span class="o">.</span><span class="n">head</span><span class="p">()</span>
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">target_dataset</span>
 </pre></div>
 
     </div>
@@ -16548,6 +15941,390 @@ memory usage: 4.3+ MB
     <tr style="text-align: right;">
       <th></th>
       <th>person</th>
+      <th>offer_id</th>
+      <th>time_received</th>
+      <th>time_viewed</th>
+      <th>time_transaction</th>
+      <th>time_completed</th>
+      <th>amount_with_offer</th>
+      <th>label_effective_offer</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>3.0</td>
+      <td>3</td>
+      <td>0.0</td>
+      <td>0.25</td>
+      <td>,5.5</td>
+      <td>5.50</td>
+      <td>19.89</td>
+      <td>1</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>3.0</td>
+      <td>7</td>
+      <td>7.0</td>
+      <td>9.00</td>
+      <td>9.25</td>
+      <td>9.25</td>
+      <td>19.67</td>
+      <td>1</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>3.0</td>
+      <td>0</td>
+      <td>17.0</td>
+      <td>17.00</td>
+      <td>,21.25</td>
+      <td>21.25</td>
+      <td>21.72</td>
+      <td>1</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>3.0</td>
+      <td>8</td>
+      <td>21.0</td>
+      <td>24.25</td>
+      <td>,21.25</td>
+      <td>21.25</td>
+      <td>21.72</td>
+      <td>1</td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>5.0</td>
+      <td>9</td>
+      <td>0.0</td>
+      <td>0.75</td>
+      <td></td>
+      <td>NaN</td>
+      <td>0.00</td>
+      <td>0</td>
+    </tr>
+    <tr>
+      <th>...</th>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+    </tr>
+    <tr>
+      <th>66496</th>
+      <td>14695.0</td>
+      <td>1</td>
+      <td>21.0</td>
+      <td>21.00</td>
+      <td></td>
+      <td>NaN</td>
+      <td>0.00</td>
+      <td>0</td>
+    </tr>
+    <tr>
+      <th>66497</th>
+      <td>14695.0</td>
+      <td>9</td>
+      <td>24.0</td>
+      <td>NaN</td>
+      <td>,29.25</td>
+      <td>NaN</td>
+      <td>4.62</td>
+      <td>0</td>
+    </tr>
+    <tr>
+      <th>66498</th>
+      <td>16139.0</td>
+      <td>2</td>
+      <td>21.0</td>
+      <td>21.00</td>
+      <td>-1</td>
+      <td>NaN</td>
+      <td>0.00</td>
+      <td>0</td>
+    </tr>
+    <tr>
+      <th>66499</th>
+      <td>16139.0</td>
+      <td>1</td>
+      <td>24.0</td>
+      <td>24.00</td>
+      <td></td>
+      <td>NaN</td>
+      <td>0.00</td>
+      <td>0</td>
+    </tr>
+    <tr>
+      <th>66500</th>
+      <td>11903.0</td>
+      <td>1</td>
+      <td>24.0</td>
+      <td>24.00</td>
+      <td></td>
+      <td>NaN</td>
+      <td>0.00</td>
+      <td>0</td>
+    </tr>
+  </tbody>
+</table>
+<p>66501 rows × 8 columns</p>
+</div>
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<div class="highlight"><pre><span></span><span class="c1"># Save the wrangled data</span>
+<span class="n">transcript_offer</span><span class="o">.</span><span class="n">to_csv</span><span class="p">(</span><span class="s1">&#39;./data_generated/transcript_offer_wrangled.csv&#39;</span><span class="p">,</span> <span class="n">index</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+<span class="n">target_dataset</span><span class="o">.</span><span class="n">to_csv</span><span class="p">(</span><span class="s1">&#39;./data_generated/target_dataset_wrangled.csv&#39;</span><span class="p">,</span> <span class="n">index</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+</pre></div>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h2 id="3.2.-[CHECK-the-wrangled-data](#Start)"><a class="anchor" id="3.2">3.2. [CHECK the wrangled data](#Start)</a><a class="anchor-link" href="#3.2.-[CHECK-the-wrangled-data](#Start)">&#182;</a></h2>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<div class="highlight"><pre><span></span><span class="c1">### Alternative: load in the two wrangled dataset</span>
+<span class="n">transcript_offer</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="s1">&#39;./data_generated/transcript_offer_wrangled.csv&#39;</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="p">{</span><span class="s1">&#39;person&#39;</span><span class="p">:</span> <span class="nb">int</span><span class="p">})</span>
+<span class="n">target_dataset</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="s1">&#39;./data_generated/target_dataset_wrangled.csv&#39;</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="p">{</span><span class="s1">&#39;person&#39;</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="s1">&#39;offer_id&#39;</span><span class="p">:</span> <span class="nb">str</span><span class="p">})</span>
+</pre></div>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h3 id="3.2.1-Basic-information-of-wrangled-data"><code>3.2.1</code> Basic information of wrangled data<a class="anchor-link" href="#3.2.1-Basic-information-of-wrangled-data">&#182;</a></h3>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[37]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">target_dataset</span><span class="o">.</span><span class="n">head</span><span class="p">()</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+
+<div class="output_area">
+
+    <div class="prompt output_prompt">Out[37]:</div>
+
+
+
+<div class="output_html rendered_html output_subarea output_execute_result">
+<div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>person</th>
+      <th>offer_id</th>
+      <th>time_received</th>
+      <th>time_viewed</th>
+      <th>time_transaction</th>
+      <th>time_completed</th>
+      <th>amount_with_offer</th>
+      <th>label_effective_offer</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>3.0</td>
+      <td>3</td>
+      <td>0.0</td>
+      <td>0.25</td>
+      <td>,5.5</td>
+      <td>5.50</td>
+      <td>19.89</td>
+      <td>1</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>3.0</td>
+      <td>7</td>
+      <td>7.0</td>
+      <td>9.00</td>
+      <td>9.25</td>
+      <td>9.25</td>
+      <td>19.67</td>
+      <td>1</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>3.0</td>
+      <td>0</td>
+      <td>17.0</td>
+      <td>17.00</td>
+      <td>,21.25</td>
+      <td>21.25</td>
+      <td>21.72</td>
+      <td>1</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>3.0</td>
+      <td>8</td>
+      <td>21.0</td>
+      <td>24.25</td>
+      <td>,21.25</td>
+      <td>21.25</td>
+      <td>21.72</td>
+      <td>1</td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>5.0</td>
+      <td>9</td>
+      <td>0.0</td>
+      <td>0.75</td>
+      <td></td>
+      <td>NaN</td>
+      <td>0.00</td>
+      <td>0</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[38]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">target_dataset</span><span class="o">.</span><span class="n">info</span><span class="p">()</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+
+<div class="output_area">
+
+    <div class="prompt"></div>
+
+
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>&lt;class &#39;pandas.core.frame.DataFrame&#39;&gt;
+RangeIndex: 66501 entries, 0 to 66500
+Data columns (total 8 columns):
+ #   Column                 Non-Null Count  Dtype  
+---  ------                 --------------  -----  
+ 0   person                 66501 non-null  float64
+ 1   offer_id               66501 non-null  object 
+ 2   time_received          66501 non-null  float64
+ 3   time_viewed            49860 non-null  float64
+ 4   time_transaction       66501 non-null  object 
+ 5   time_completed         40407 non-null  float64
+ 6   amount_with_offer      66501 non-null  float64
+ 7   label_effective_offer  66501 non-null  int64  
+dtypes: float64(5), int64(1), object(2)
+memory usage: 4.1+ MB
+</pre>
+</div>
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[39]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">transcript_offer</span><span class="o">.</span><span class="n">head</span><span class="p">()</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+
+<div class="output_area">
+
+    <div class="prompt output_prompt">Out[39]:</div>
+
+
+
+<div class="output_html rendered_html output_subarea output_execute_result">
+<div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>person</th>
       <th>event</th>
       <th>time</th>
       <th>amount</th>
@@ -16559,7 +16336,7 @@ memory usage: 4.3+ MB
   <tbody>
     <tr>
       <th>0</th>
-      <td>3</td>
+      <td>3.0</td>
       <td>offer received</td>
       <td>0.0</td>
       <td>0.0</td>
@@ -16569,7 +16346,7 @@ memory usage: 4.3+ MB
     </tr>
     <tr>
       <th>1</th>
-      <td>5</td>
+      <td>5.0</td>
       <td>offer received</td>
       <td>0.0</td>
       <td>0.0</td>
@@ -16579,7 +16356,7 @@ memory usage: 4.3+ MB
     </tr>
     <tr>
       <th>2</th>
-      <td>8</td>
+      <td>8.0</td>
       <td>offer received</td>
       <td>0.0</td>
       <td>0.0</td>
@@ -16589,7 +16366,7 @@ memory usage: 4.3+ MB
     </tr>
     <tr>
       <th>3</th>
-      <td>12</td>
+      <td>12.0</td>
       <td>offer received</td>
       <td>0.0</td>
       <td>0.0</td>
@@ -16599,7 +16376,7 @@ memory usage: 4.3+ MB
     </tr>
     <tr>
       <th>4</th>
-      <td>13</td>
+      <td>13.0</td>
       <td>offer received</td>
       <td>0.0</td>
       <td>0.0</td>
@@ -16620,7 +16397,7 @@ memory usage: 4.3+ MB
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[36]:</div>
+<div class="prompt input_prompt">In&nbsp;[40]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="n">transcript_offer</span><span class="o">.</span><span class="n">info</span><span class="p">()</span>
@@ -16645,15 +16422,15 @@ Int64Index: 272762 entries, 0 to 272761
 Data columns (total 7 columns):
  #   Column      Non-Null Count   Dtype  
 ---  ------      --------------   -----  
- 0   person      272762 non-null  int32  
+ 0   person      272762 non-null  float64
  1   event       272762 non-null  object 
  2   time        272762 non-null  float64
  3   amount      272762 non-null  float64
  4   offer_id    272762 non-null  object 
  5   duration    148805 non-null  float64
  6   offer_type  148805 non-null  object 
-dtypes: float64(3), int32(1), object(3)
-memory usage: 15.6+ MB
+dtypes: float64(4), object(3)
+memory usage: 26.6+ MB
 </pre>
 </div>
 </div>
@@ -16671,7 +16448,7 @@ memory usage: 15.6+ MB
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[37]:</div>
+<div class="prompt input_prompt">In&nbsp;[41]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="c1"># CHECK the list of unique_person </span>
@@ -16696,13 +16473,13 @@ memory usage: 15.6+ MB
 
 <div class="output_area">
 
-    <div class="prompt output_prompt">Out[37]:</div>
+    <div class="prompt output_prompt">Out[41]:</div>
 
 
 
 
 <div class="output_text output_subarea output_execute_result">
-<pre>array([ 5639, 15391,   872, 14763,  6789])</pre>
+<pre>array([ 5639., 15391.,   872., 14763.,  6789.])</pre>
 </div>
 
 </div>
@@ -16724,11 +16501,11 @@ memory usage: 15.6+ MB
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[38]:</div>
+<div class="prompt input_prompt">In&nbsp;[42]:</div>
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="n">transcript_offer</span><span class="p">[</span><span class="n">transcript_offer</span><span class="o">.</span><span class="n">person</span><span class="o">.</span><span class="n">isin</span><span class="p">(</span><span class="n">person_id_disappear</span><span class="p">)]</span>
-<span class="c1"># offer_id = -1, means transaction without an offer</span>
+<div class=" highlight hl-ipython3"><pre><span></span><span class="c1"># reduced 5 person in &#39;transcript_offer&#39;</span>
+<span class="n">transcript_offer</span><span class="p">[</span><span class="n">transcript_offer</span><span class="o">.</span><span class="n">person</span><span class="o">.</span><span class="n">isin</span><span class="p">(</span><span class="n">person_id_disappear</span><span class="p">)]</span>
 </pre></div>
 
     </div>
@@ -16741,7 +16518,7 @@ memory usage: 15.6+ MB
 
 <div class="output_area">
 
-    <div class="prompt output_prompt">Out[38]:</div>
+    <div class="prompt output_prompt">Out[42]:</div>
 
 
 
@@ -16776,7 +16553,7 @@ memory usage: 15.6+ MB
   <tbody>
     <tr>
       <th>14272</th>
-      <td>5639</td>
+      <td>5639.0</td>
       <td>transaction</td>
       <td>0.25</td>
       <td>4.74</td>
@@ -16786,7 +16563,7 @@ memory usage: 15.6+ MB
     </tr>
     <tr>
       <th>19395</th>
-      <td>15391</td>
+      <td>15391.0</td>
       <td>transaction</td>
       <td>0.75</td>
       <td>16.62</td>
@@ -16796,7 +16573,7 @@ memory usage: 15.6+ MB
     </tr>
     <tr>
       <th>61614</th>
-      <td>872</td>
+      <td>872.0</td>
       <td>transaction</td>
       <td>7.25</td>
       <td>0.65</td>
@@ -16806,7 +16583,7 @@ memory usage: 15.6+ MB
     </tr>
     <tr>
       <th>77551</th>
-      <td>872</td>
+      <td>872.0</td>
       <td>transaction</td>
       <td>9.25</td>
       <td>1.91</td>
@@ -16816,7 +16593,7 @@ memory usage: 15.6+ MB
     </tr>
     <tr>
       <th>95136</th>
-      <td>14763</td>
+      <td>14763.0</td>
       <td>transaction</td>
       <td>12.75</td>
       <td>17.51</td>
@@ -16826,7 +16603,7 @@ memory usage: 15.6+ MB
     </tr>
     <tr>
       <th>96434</th>
-      <td>5639</td>
+      <td>5639.0</td>
       <td>transaction</td>
       <td>13.25</td>
       <td>5.09</td>
@@ -16836,7 +16613,7 @@ memory usage: 15.6+ MB
     </tr>
     <tr>
       <th>97362</th>
-      <td>6789</td>
+      <td>6789.0</td>
       <td>transaction</td>
       <td>13.50</td>
       <td>22.75</td>
@@ -16846,7 +16623,7 @@ memory usage: 15.6+ MB
     </tr>
     <tr>
       <th>97802</th>
-      <td>15391</td>
+      <td>15391.0</td>
       <td>transaction</td>
       <td>13.50</td>
       <td>27.60</td>
@@ -16856,7 +16633,7 @@ memory usage: 15.6+ MB
     </tr>
     <tr>
       <th>98606</th>
-      <td>14763</td>
+      <td>14763.0</td>
       <td>transaction</td>
       <td>13.75</td>
       <td>28.70</td>
@@ -16866,7 +16643,7 @@ memory usage: 15.6+ MB
     </tr>
     <tr>
       <th>126518</th>
-      <td>6789</td>
+      <td>6789.0</td>
       <td>transaction</td>
       <td>15.75</td>
       <td>27.20</td>
@@ -16876,7 +16653,7 @@ memory usage: 15.6+ MB
     </tr>
     <tr>
       <th>145281</th>
-      <td>872</td>
+      <td>872.0</td>
       <td>transaction</td>
       <td>17.00</td>
       <td>1.25</td>
@@ -16886,7 +16663,7 @@ memory usage: 15.6+ MB
     </tr>
     <tr>
       <th>164094</th>
-      <td>14763</td>
+      <td>14763.0</td>
       <td>transaction</td>
       <td>18.50</td>
       <td>11.53</td>
@@ -16896,7 +16673,7 @@ memory usage: 15.6+ MB
     </tr>
     <tr>
       <th>203208</th>
-      <td>5639</td>
+      <td>5639.0</td>
       <td>transaction</td>
       <td>22.00</td>
       <td>7.40</td>
@@ -16906,7 +16683,7 @@ memory usage: 15.6+ MB
     </tr>
     <tr>
       <th>216337</th>
-      <td>872</td>
+      <td>872.0</td>
       <td>transaction</td>
       <td>23.75</td>
       <td>3.14</td>
@@ -16916,7 +16693,7 @@ memory usage: 15.6+ MB
     </tr>
     <tr>
       <th>230672</th>
-      <td>6789</td>
+      <td>6789.0</td>
       <td>transaction</td>
       <td>24.00</td>
       <td>17.67</td>
@@ -16926,7 +16703,7 @@ memory usage: 15.6+ MB
     </tr>
     <tr>
       <th>239721</th>
-      <td>5639</td>
+      <td>5639.0</td>
       <td>transaction</td>
       <td>24.75</td>
       <td>8.78</td>
@@ -16936,7 +16713,7 @@ memory usage: 15.6+ MB
     </tr>
     <tr>
       <th>255722</th>
-      <td>14763</td>
+      <td>14763.0</td>
       <td>transaction</td>
       <td>26.50</td>
       <td>9.72</td>
@@ -16946,7 +16723,7 @@ memory usage: 15.6+ MB
     </tr>
     <tr>
       <th>260533</th>
-      <td>14763</td>
+      <td>14763.0</td>
       <td>transaction</td>
       <td>27.25</td>
       <td>18.97</td>
@@ -16956,7 +16733,7 @@ memory usage: 15.6+ MB
     </tr>
     <tr>
       <th>260593</th>
-      <td>15391</td>
+      <td>15391.0</td>
       <td>transaction</td>
       <td>27.25</td>
       <td>19.03</td>
@@ -16975,9 +16752,21 @@ memory usage: 15.6+ MB
 </div>
 
 </div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p><strong>FOUND</strong></p>
+<ol>
+<li>offer_id = -1, means transaction without any of 'offer received'</li>
+<li>In column 'event': there are only transaction</li>
+</ol>
+
+</div>
+</div>
+</div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[39]:</div>
+<div class="prompt input_prompt">In&nbsp;[43]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="c1"># more details for 5 person</span>
@@ -16994,7 +16783,7 @@ memory usage: 15.6+ MB
 
 <div class="output_area">
 
-    <div class="prompt output_prompt">Out[39]:</div>
+    <div class="prompt output_prompt">Out[43]:</div>
 
 
 
@@ -17084,7 +16873,7 @@ memory usage: 15.6+ MB
 <li>Common features for these 5 person<ul>
 <li>more than 50 years old, maybe don't like modern media, enjoy the old day's life.</li>
 <li>the enroll date is early.
-So age and enroo date maybe two important factors that imply the way to interact with offer.</li>
+So age and enroll date maybe two important factors that imply the way to interact with offer.</li>
 </ul>
 </li>
 <li>These 5 person have the same structure of data, easy to modify</li>
@@ -17095,16 +16884,16 @@ So age and enroo date maybe two important factors that imply the way to interact
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[40]:</div>
+<div class="prompt input_prompt">In&nbsp;[44]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="c1"># modify the target_dataset</span>
 <span class="n">modified_target_dataset</span> <span class="o">=</span> <span class="n">target_dataset</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
 <span class="k">for</span> <span class="n">person_id</span> <span class="ow">in</span> <span class="n">person_id_disappear</span><span class="p">:</span>
-    <span class="n">offer_id</span> <span class="o">=</span> <span class="s1">&#39;-1&#39;</span>
+    <span class="n">offer_id</span> <span class="o">=</span> <span class="s1">&#39;-1&#39;</span>  <span class="c1"># means no &#39;offer received&#39;</span>
     <span class="c1"># these 5 person have the same structure of data</span>
     <span class="c1"># set time_transaction = -1(init value)</span>
-    <span class="c1"># set label_effective_offer = -2</span>
+    <span class="c1"># set label_effective_offer = -2 as a special mark</span>
     <span class="n">to_append</span> <span class="o">=</span> <span class="p">[</span><span class="n">person_id</span><span class="p">,</span> <span class="n">offer_id</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">nan</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">nan</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">nan</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="o">-</span><span class="mi">2</span><span class="p">]</span>
     <span class="n">to_append_series</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">Series</span><span class="p">(</span><span class="n">to_append</span><span class="p">,</span> <span class="n">index</span> <span class="o">=</span> <span class="n">target_dataset</span><span class="o">.</span><span class="n">columns</span><span class="p">)</span>
     
@@ -17120,7 +16909,7 @@ So age and enroo date maybe two important factors that imply the way to interact
 <div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
 </div><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<h2 id="3.3-Save-the-modified-target_dataset">3.3 Save the modified target_dataset<a class="anchor-link" href="#3.3-Save-the-modified-target_dataset">&#182;</a></h2><div class="highlight"><pre><span></span><span class="n">modified_target_dataset</span><span class="o">.</span><span class="n">to_csv</span><span class="p">(</span><span class="s1">&#39;./data_generated/modified_wrangled_target_dataset.csv&#39;</span><span class="p">)</span>
+<h2 id="3.3-Save-the-modified-target_dataset">3.3 Save the modified target_dataset<a class="anchor-link" href="#3.3-Save-the-modified-target_dataset">&#182;</a></h2><div class="highlight"><pre><span></span><span class="n">modified_target_dataset</span><span class="o">.</span><span class="n">to_csv</span><span class="p">(</span><span class="s1">&#39;./data_generated/modified_wrangled_target_dataset.csv&#39;</span><span class="p">,</span> <span class="n">index</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
 </pre></div>
 
 </div>
@@ -17137,44 +16926,44 @@ So age and enroo date maybe two important factors that imply the way to interact
 <div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
 </div><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<h1 id="Summary(for-myself)">Summary(for myself)<a class="anchor-link" href="#Summary(for-myself)">&#182;</a></h1><h3 id="1.-Key-points-(some-errors-easily-happend)">1. Key points (some errors easily happend)<a class="anchor-link" href="#1.-Key-points-(some-errors-easily-happend)">&#182;</a></h3><ol>
-<li><p>Type of data</p>
+<h2 id="Summary">Summary<a class="anchor-link" href="#Summary">&#182;</a></h2><ol>
+<li><p>'obeject' can store more possible values than 'int'</p>
 <ul>
-<li><strong>offer_id</strong>: changed int to obeject '0' '-1', so that can store more possible values, just for <code>event == 'transaction'</code></li>
+<li><strong>offer_id</strong>: for <code>event == 'transaction'</code>, one transaction may releted to more than one 'offer_id'  </li>
 </ul>
 </li>
 <li><p>[]list {}dict are not hashable, with them <code>.unique()</code> can't be used.</p>
 <ul>
 <li><p>use str to replace list</p>
 <div class="highlight"><pre><span></span><span class="k">for</span> <span class="n">time</span> <span class="ow">in</span> <span class="n">valid_transactions</span><span class="o">.</span><span class="n">time</span><span class="o">.</span><span class="n">values</span><span class="o">.</span><span class="n">tolist</span><span class="p">():</span>
-  <span class="n">time_transaction</span> <span class="o">=</span> <span class="n">time_transaction</span><span class="o">+</span><span class="s1">&#39;,&#39;</span><span class="o">+</span><span class="nb">str</span><span class="p">(</span><span class="n">time</span><span class="p">)</span>
+  <span class="n">time_transaction</span> <span class="o">=</span> <span class="n">time_transaction</span> <span class="o">+</span> <span class="s1">&#39;,&#39;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">time</span><span class="p">)</span>
 </pre></div>
 </li>
 </ul>
 </li>
-<li>global variables just for small programm</li>
-</ol>
-<h3 id="2.-Usage-of-class">2. Usage of <code>class</code><a class="anchor-link" href="#2.-Usage-of-class">&#182;</a></h3><ol>
-<li>apply.(func, args=(,)) <br>
- func(<strong>self</strong>, ....)</li>
-</ol>
-<h3 id="3.-Data-IO">3. Data IO<a class="anchor-link" href="#3.-Data-IO">&#182;</a></h3><ol>
-<li>.to_csv(index=True) 第一列为index, 但是读取时提供RangeIndex,同时加一列Unnamed: 0<ul>
-<li>如果index=False,原先的index就会消失不见 <br>
-关键：如何转化Unnamed:0为index——恢复原先的表格数据<div class="highlight"><pre><span></span><span class="n">df</span><span class="o">.</span><span class="n">index</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">iloc</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">values</span>
-<span class="k">del</span> <span class="n">df</span><span class="p">[</span><span class="s1">&#39;Unnamed: 0&#39;</span><span class="p">]</span>
+<li><p>global variables just for small programm</p>
+</li>
+<li><p>Usage of <code>class</code></p>
+<div class="highlight"><pre><span></span><span class="n">apply</span><span class="o">.</span><span class="p">(</span><span class="n">func</span><span class="p">,</span> <span class="n">args</span><span class="o">=</span><span class="p">(,))</span>  <span class="c1">#here func is self.func()</span>
 </pre></div>
 </li>
-</ul>
+<li><p>Data IO: notice the type of data</p>
+<div class="highlight"><pre><span></span><span class="n">transcript_offer</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="s1">&#39;./data_generated/transcript_offer_for_CLASS_test.csv&#39;</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="p">{</span><span class="s1">&#39;offer_id&#39;</span><span class="p">:</span> <span class="nb">str</span><span class="p">})</span>   
+<span class="n">target_dataset</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="s1">&#39;./data_generated/target_dataset_wrangled.csv&#39;</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="p">{</span><span class="s1">&#39;offer_id&#39;</span><span class="p">:</span> <span class="nb">str</span><span class="p">})</span>
+</pre></div>
+<p>If original index keeped: <br></p>
+<div class="highlight"><pre><span></span><span class="c1">#recover to original dataset: index is the same</span>
+ <span class="n">target_dataset</span><span class="o">.</span><span class="n">index</span> <span class="o">=</span> <span class="n">target_dataset</span><span class="o">.</span><span class="n">iloc</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">values</span>
+ <span class="k">del</span> <span class="n">target_dataset</span><span class="p">[</span><span class="s1">&#39;Unnamed: 0&#39;</span><span class="p">]</span>
+</pre></div>
 </li>
-</ol>
-<h3 id="4.-&#25968;&#25454;&#39044;&#22788;&#29702;&#36807;&#31243;">4. &#25968;&#25454;&#39044;&#22788;&#29702;&#36807;&#31243;<a class="anchor-link" href="#4.-&#25968;&#25454;&#39044;&#22788;&#29702;&#36807;&#31243;">&#182;</a></h3><p>总会有边界情况没有顾及到</p>
-<ol>
-<li><p>offer_id == -1时（没有收到offer），那么以received为标志的cut_units函数就漏掉了这种情况，导致遗漏了5个只有transaction的人</p>
+<li><p>Data preprocessing
+There will always be border conditions that are not taken into account:<br>
+When <code>offer_id == '-1'</code>, one situation is neglected, this lead to the disappear of the 5 person.</p>
 <div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">get_dateset_from_unique_offer_id</span><span class="p">(</span><span class="n">groupby_offer_id</span><span class="p">,</span> <span class="n">offer_id_list</span><span class="p">,</span> <span class="n">transactions</span><span class="p">):</span>
      <span class="o">......</span>
      <span class="k">if</span> <span class="n">offer_id</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">valid_offer_id</span><span class="p">:</span>
-         <span class="c1"># Alternative: see Summary in Notebook</span>
+         <span class="c1"># Here is one situation neglected</span>
          <span class="k">continue</span>
      <span class="o">......</span>
 
@@ -17182,7 +16971,7 @@ So age and enroo date maybe two important factors that imply the way to interact
  <span class="n">person</span> <span class="o">=</span> <span class="n">transactions</span><span class="o">.</span><span class="n">person</span><span class="o">.</span><span class="n">unique</span><span class="p">()[</span><span class="mi">0</span><span class="p">]</span>
  <span class="n">target_dict</span> <span class="o">=</span> <span class="p">{</span>
          <span class="s2">&quot;person&quot;</span><span class="p">:</span>   <span class="n">person</span><span class="p">,</span>
-         <span class="s2">&quot;offer_id&quot;</span><span class="p">:</span> <span class="s1">&#39;-1&#39;</span><span class="p">,</span>
+         <span class="s2">&quot;offer_id&quot;</span><span class="p">:</span> <span class="s1">&#39;-1&#39;</span><span class="p">,</span>  <span class="c1"># here set to &#39;-1&#39;: none offer received</span>
          <span class="s2">&quot;time_received&quot;</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">nan</span><span class="p">,</span>
          <span class="s2">&quot;time_viewed&quot;</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">nan</span><span class="p">,</span>
          <span class="s2">&quot;time_transaction&quot;</span><span class="p">:</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span>
@@ -17193,25 +16982,33 @@ So age and enroo date maybe two important factors that imply the way to interact
 </pre></div>
 </li>
 </ol>
-<ol>
-<li><p>复杂过程的程序流程图很重要：思路清晰，对症下药，否则一团乱麻，徒伤脑筋<br>
-在最初的流程中，遗漏了一种情况：针对infomational的offer，有unique_person的transactions，但是却没有有效的transaction时，怎么办？<br>
-没有针对此情况作处理，导致保留初始值 Label=='-1'<br>
-而针对其他类型的offer, 判断条件complete保障了有效transaction的存在，杜绝了异常情况
-<br></p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h1 id="Tips(for-myself)">Tips(for myself)<a class="anchor-link" href="#Tips(for-myself)">&#182;</a></h1><ol>
+<li><p>Form my own naming style: Under Score Case with Hungarian notation</p>
+<ul>
+<li>_list, _df at the end shows the variable type</li>
+<li>_Groupby some special type with Uppercase, here is a groupby object in pandas</li>
+</ul>
 </li>
-<li><p>其实错漏情况也无妨，可以事后添加一个程序补救；甚至效率更高，因为补救程序针对性更强
-但是最好在最初数据预处理过程中考虑全面，条理架构清晰</p>
+<li><p>Be clear with the type of data<br>
+np.where(profile_2_clean.income.isnull())[0]  # return index array</p>
 </li>
-<li><p>有的情况是边界情况导致程序无法执行，需要额外判断
-比如unique_person没有transactions,那么无法从空的Series中读取数据</p>
-<div class="highlight"><pre><span></span><span class="n">transaction_time</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">transactions</span><span class="o">.</span><span class="n">time</span><span class="p">)</span>
-</pre></div>
+<li><p>Accumulate common sense</p>
+<ul>
+<li>if there is no transactions, we can't use <code>transactions.time</code></li>
+<li>After modifying of .py, the import is not updated, need to use autoreload<br>
+%load_ext autoreload<br>
+%autoreload 1<br>
+%aimport data_preprocessing_class</li>
+</ul>
 </li>
 </ol>
-<p><strong>启发</strong>：<br>
-金字塔结构：从大分类，到小分类；层级彼此之间独立，层级内部完全覆盖所有情况<br>
-比如informational和other类型的offer就是两种彼此独立的层级</p>
 
 </div>
 </div>
