@@ -16926,7 +16926,7 @@ So age and enroll date maybe two important factors that imply the way to interac
 <div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
 </div><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<h2 id="Summary">Summary<a class="anchor-link" href="#Summary">&#182;</a></h2><ol>
+<h2 id="Tips(for-myself)">Tips(for myself)<a class="anchor-link" href="#Tips(for-myself)">&#182;</a></h2><ol>
 <li><p>'obeject' can store more possible values than 'int'</p>
 <ul>
 <li><strong>offer_id</strong>: for <code>event == 'transaction'</code>, one transaction may releted to more than one 'offer_id'  </li>
@@ -16957,30 +16957,6 @@ So age and enroll date maybe two important factors that imply the way to interac
  <span class="k">del</span> <span class="n">target_dataset</span><span class="p">[</span><span class="s1">&#39;Unnamed: 0&#39;</span><span class="p">]</span>
 </pre></div>
 </li>
-<li><p>Data preprocessing
-There will always be border conditions that are not taken into account:<br>
-When <code>offer_id == '-1'</code>, one situation is neglected, this lead to the disappear of the 5 person.</p>
-<div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">get_dateset_from_unique_offer_id</span><span class="p">(</span><span class="n">groupby_offer_id</span><span class="p">,</span> <span class="n">offer_id_list</span><span class="p">,</span> <span class="n">transactions</span><span class="p">):</span>
-     <span class="o">......</span>
-     <span class="k">if</span> <span class="n">offer_id</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">valid_offer_id</span><span class="p">:</span>
-         <span class="c1"># Here is one situation neglected</span>
-         <span class="k">continue</span>
-     <span class="o">......</span>
-
- <span class="c1"># 补充 </span>
- <span class="n">person</span> <span class="o">=</span> <span class="n">transactions</span><span class="o">.</span><span class="n">person</span><span class="o">.</span><span class="n">unique</span><span class="p">()[</span><span class="mi">0</span><span class="p">]</span>
- <span class="n">target_dict</span> <span class="o">=</span> <span class="p">{</span>
-         <span class="s2">&quot;person&quot;</span><span class="p">:</span>   <span class="n">person</span><span class="p">,</span>
-         <span class="s2">&quot;offer_id&quot;</span><span class="p">:</span> <span class="s1">&#39;-1&#39;</span><span class="p">,</span>  <span class="c1"># here set to &#39;-1&#39;: none offer received</span>
-         <span class="s2">&quot;time_received&quot;</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">nan</span><span class="p">,</span>
-         <span class="s2">&quot;time_viewed&quot;</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">nan</span><span class="p">,</span>
-         <span class="s2">&quot;time_transaction&quot;</span><span class="p">:</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span>
-         <span class="s2">&quot;time_completed&quot;</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">nan</span><span class="p">,</span>
-         <span class="s2">&quot;amount_with_offer&quot;</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span>
-         <span class="s2">&quot;label_effective_offer&quot;</span><span class="p">:</span> <span class="o">-</span><span class="mi">2</span><span class="p">}</span>
- <span class="bp">self</span><span class="o">.</span><span class="n">target_dataset_list</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">target_dict</span><span class="p">)</span>
-</pre></div>
-</li>
 </ol>
 
 </div>
@@ -16989,7 +16965,7 @@ When <code>offer_id == '-1'</code>, one situation is neglected, this lead to the
 <div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
 </div><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<h1 id="Tips(for-myself)">Tips(for myself)<a class="anchor-link" href="#Tips(for-myself)">&#182;</a></h1><ol>
+<h1 id="Summary(for-myself)">Summary(for myself)<a class="anchor-link" href="#Summary(for-myself)">&#182;</a></h1><ol>
 <li><p>Form my own naming style: Under Score Case with Hungarian notation</p>
 <ul>
 <li>_list, _df at the end shows the variable type</li>
@@ -17001,14 +16977,57 @@ np.where(profile_2_clean.income.isnull())[0]  # return index array</p>
 </li>
 <li><p>Accumulate common sense</p>
 <ul>
-<li>if there is no transactions, we can't use <code>transactions.time</code></li>
 <li>After modifying of .py, the import is not updated, need to use autoreload<br>
 %load_ext autoreload<br>
 %autoreload 1<br>
 %aimport data_preprocessing_class</li>
 </ul>
 </li>
+<li><p>数据预处理</p>
+<ul>
+<li><p>边界情况很容易遗漏@单元测试边界情况<br>
+When <code>offer_id == '-1'</code>, one situation is neglected, this lead to the disappear of the 5 person.</p>
+<div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">get_dateset_from_unique_offer_id</span><span class="p">(</span><span class="n">groupby_offer_id</span><span class="p">,</span> <span class="n">offer_id_list</span><span class="p">,</span> <span class="n">transactions</span><span class="p">):</span>
+  <span class="o">......</span>
+  <span class="k">if</span> <span class="n">offer_id</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">valid_offer_id</span><span class="p">:</span>
+      <span class="c1"># Here is one situation neglected</span>
+      <span class="k">continue</span>
+  <span class="o">......</span>
+
+<span class="c1"># 补充 </span>
+<span class="n">person</span> <span class="o">=</span> <span class="n">transactions</span><span class="o">.</span><span class="n">person</span><span class="o">.</span><span class="n">unique</span><span class="p">()[</span><span class="mi">0</span><span class="p">]</span>
+<span class="n">target_dict</span> <span class="o">=</span> <span class="p">{</span>
+      <span class="s2">&quot;person&quot;</span><span class="p">:</span>   <span class="n">person</span><span class="p">,</span>
+      <span class="s2">&quot;offer_id&quot;</span><span class="p">:</span> <span class="s1">&#39;-1&#39;</span><span class="p">,</span>  <span class="c1"># here set to &#39;-1&#39;: none offer received</span>
+      <span class="s2">&quot;time_received&quot;</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">nan</span><span class="p">,</span>
+      <span class="s2">&quot;time_viewed&quot;</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">nan</span><span class="p">,</span>
+      <span class="s2">&quot;time_transaction&quot;</span><span class="p">:</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span>
+      <span class="s2">&quot;time_completed&quot;</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">nan</span><span class="p">,</span>
+      <span class="s2">&quot;amount_with_offer&quot;</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span>
+      <span class="s2">&quot;label_effective_offer&quot;</span><span class="p">:</span> <span class="o">-</span><span class="mi">2</span><span class="p">}</span>
+<span class="bp">self</span><span class="o">.</span><span class="n">target_dataset_list</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">target_dict</span><span class="p">)</span>
+</pre></div>
+</li>
+<li><p>不论程序是否复杂，尽量画出程序流程图：思路清晰，对症下药。否则一团乱麻，徒伤脑筋<br>
+在最初的流程中，遗漏了一种情况：针对infomational的offer，person有transactions，但是却没有有效的transaction时，怎么办？<br>
+没有针对此情况作处理，导致保留初始值 Label=='-1'。<br>
+而针对其他类型的offer, 判断条件complete保障了有效transaction的存在，本身侥幸杜绝了异常情况。</p>
+</li>
+<li><p>其实错漏情况也无妨，可以事后添加一个程序补救；甚至效率更高，因为补救程序针对性更强<br>
+但是最好在最初数据预处理过程中考虑全面，条理架构清晰</p>
+</li>
+<li><p>有的情况是边界情况导致程序无法执行，需要额外判断
+比如unique_person没有transactions,那么无法从空的Series中读取数据</p>
+<div class="highlight"><pre><span></span><span class="n">transaction_time</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">transactions</span><span class="o">.</span><span class="n">time</span><span class="p">)</span> <span class="c1"># 需要添加判断条件，或者用异常处理</span>
+</pre></div>
+</li>
+</ul>
+</li>
 </ol>
+<p><strong>启发</strong>：金字塔结构<br>
+从大分类，到小分类；<br>
+层级彼此之间独立，层级内部完全覆盖所有情况<br>
+比如informational和other类型的offer就是两种彼此独立的层级</p>
 
 </div>
 </div>
