@@ -1,3 +1,4 @@
 models_prepare.pckl
 models_rec.pckl
 models_sent.pckl
+*.pckl
