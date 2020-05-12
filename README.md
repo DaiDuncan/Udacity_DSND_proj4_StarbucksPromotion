@@ -93,6 +93,59 @@ Input necessary information, after submit, the Web page will return an answer af
 ## 3 Files <a name="FileDescription"></a>
 <pre>
 Workspace:.
+│  .gitignore
+│  1_Data_Cleaning_and_Preprocessing.html
+│  1_Data_Cleaning_and_Preprocessing.ipynb
+│  2_heuristic_exploration.html
+│  2_heuristic_exploration.ipynb
+│  3_ML_model.html
+│  3_ML_model.ipynb
+│  data_preprocessing_class.py
+│  LICENSE
+│  model_sent_target(GradientBoosting).pckl
+│  README.md
+│      
+├─app
+│  │  run.py
+│  │  
+│  ├─static
+│  │  └─images
+│  │          github.png
+│  │          starbucks.png
+│  │          udacity.png
+│  │          
+│  └─templates
+│          go.html
+│          master.html
+│          
+├─data
+│      portfolio.json
+│      profile.json
+│      transcript.json
+│      
+├─data_generated
+│      model_dataset_raw.csv
+│      portfolio_cleaned.csv
+│      profile_cleaned.csv
+│      target_dataset_wrangled.csv
+│      target_dataset_wrangled_modified_.csv
+│      transcript_offer_wrangled.csv
+│      
+├─images
+│      Distribution of income.png
+│      Distribution of the Segments with age & income.png
+│      flow_chart.jpg
+│      generations_age.png
+│      model_dataset.png
+│      offer_info.png
+│      pred_result.png
+│      result.png
+│      segment.png
+│      segment_group.png
+│      target_dataset.png
+│      tax.png
+│      The Distribution of Interest.png
+│      transcript_offer.png   
 
 </pre>
 
