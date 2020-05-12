@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 # Udacity_DSND_proj4_Starbucks Promotion
 
 ### [Table of Contents](#Start)
@@ -179,3 +180,8 @@ There is no requirements for any special Modules.
 [[4]generations-and-age](https://www.pewresearch.org/topics/generations-and-age/)<br>
 [[5]single taxable income](https://en.wikipedia.org/wiki/Income_tax_in_the_United_States#Marginal_tax_rates_for_2019)<br>
 [[6]Starbucks Capstone Challenge: Using Starbucks app user data to predict effective offers](https://github.com/syuenloh/UdacityDataScientistCapstone/blob/master/Starbucks%20Capstone%20Challenge%20-%20Using%20Starbucks%20app%20user%20data%20to%20predict%20effective%20offers.ipynb)<br>
+||||||| merged common ancestors
+=======
+# Udacity_DSND_proj4_StarbucksPromotion
+Data Wrangling in `1_Data_Cleaning_and_Preprocessing.ipynb`
+>>>>>>> 6539d14726d9c9d5213b36b9f6008ef0db401227
