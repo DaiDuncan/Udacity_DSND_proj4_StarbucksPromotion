@@ -56,7 +56,7 @@ What's more important, considering all kinds of response situations to offer, I 
 
 Finally, I get an ideal wrangled data set with label of segments and response groups.
 
-More details in [1_Data_Cleaning_and_Preprocessing.html]('1_Data_Cleaning_and_Preprocessing.html')
+More details in [1_Data_Cleaning_and_Preprocessing.html](./1_Data_Cleaning_and_Preprocessing.html)
 
 ### 2.2 Data Explore with heuristic method
 Using the ideal wrangled data set, based on the label of segments and response groups, I plot 4 figures, try to answer 4 questions:  
@@ -65,7 +65,7 @@ Using the ideal wrangled data set, based on the label of segments and response g
 - Does it difficult to complete the offer: tried_offer VS. effective_offer?
 - Index IIR: is the offer significant popular?  
 
-More details in [2_heuristic_exploration.html]('2_heuristic_exploration.html')
+More details in [2_heuristic_exploration.html](./2_heuristic_exploration.html)
 
 
 ### 2.3 Data Explore with Machine Learning
@@ -82,7 +82,7 @@ To answer these questions, I build a model pipeline:
 
 **Notice:** One Neural Network is also built for regeression analysing.
 
-More details in [3_ML_model.html]('3_ML_model.html')
+More details in [3_ML_model.html](./3_ML_model.html)
 
 
 ### 2.4 Flask Web App
