@@ -1,24 +1,33 @@
-{% extends "master.html" %}
+<!-- {% extends "master.html" %} -->
 {% block title %}Results{% endblock %}
 
 {% block message %}
     <hr />
-    <h4 class="text-center">MESSAGE & GENRE</h4>
-    <p class="text-center"><i>Message: {{query_message}}</i></p>
     <!--Show the information of 'genre' -->
-    <p class="text-center"><i>Message Genre: {{query_genre}}</i></p>
+    <h4 class="text-center">Customer</h4>
+    <p class="text-center"><mark>Age: {{query_age}}</mark></p>
+    <p class="text-center"><mark>Income: {{query_income}}</mark></p>
+    <p class="text-center"><mark>Enroll date: {{query_enroll}}</mark></p>
+    <p class="text-center">Gender: {{query_gender}}</p>
+    <p class="text-center">Offer_id: {{query_offer_id}}</p>
+
+    <p class="text-center">amount_with_offer: {{query_amount_offer}}</p>
+    <p class="text-center">amount_total: {{query_amount_total}}</p>
+    <p class="text-center">offer_received_cnt: {{query_offer_cnt}}</p>
+    <p class="text-center">>time_received: {{query_time_received}}</p>
+    <p class="text-center">time_viewed: {{query_time_viewed}}</p>
+
 {% endblock %}
 
 {% block content %}
     <h1 class="text-center">Result</h1>
         <ul class="list-group">
-            {% for category, classification in classification_result.items() %}
-                {% if classification == 1 %}
-                    <li class="list-group-item list-group-item-success text-center">{{category.replace('_', ' ').title()}}</li>
-                {% else %}
-                    <li class="list-group-item list-group-item-dark text-center">{{category.replace('_', ' ').title()}}</li>
-                {% endif %}
-            {% endfor %}
+            {% if pred_label == 1 %}
+                <li class="list-group-item list-group-item-success text-center">YES!!!The customer is {{pred_prob}}% likely to purchase under the influence of {{query_offer_id}}<br></li>
+            {% else %}
+                <li class="list-group-item list-group-item-dark text-center">It's a pity<br>The customer is only {{pred_prob}}% likely to purchase something related with this offer</li>
+            {% endif %}
+        </ul>
 
         </div>
     </div>

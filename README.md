@@ -104,7 +104,7 @@ There is no requirements for any special Modules.
 ## 4. Instructions <a name="Instructions"></a>
 1. Run the following command in the app's directory to run your web app.
     ```python
-    run.py
+    python run.py
     ```
 
 2. Go to http://localhost:3001
@@ -113,6 +113,11 @@ There is no requirements for any special Modules.
 
 
 ## 5. Result: <a name="Result"></a>
+1. Distribution of 12 segments based on 'age' & 'income'  
+![Distribution](./images/result.png)
+
+2. Predict result  
+![result](./images/pred_result.png)
 
 # References
 [[1]Create dummies from a column with multiple values in pandas](https://intellipaat.com/community/32880/create-dummies-from-a-column-with-multiple-values-in-pandas)<br>
