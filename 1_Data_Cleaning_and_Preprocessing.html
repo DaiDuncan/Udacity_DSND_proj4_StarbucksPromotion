@@ -13091,7 +13091,7 @@ div#notebook {
 <li>difficulty (int) – 满足推送的要求所需的最少花费</li>
 <li>reward (int) – 满足推送的要求后给与的优惠</li>
 <li>duration (int) – 推送持续的时间，单位是天</li>
-<li>channels (字符串列表)</li>
+<li>channels (list of strings)</li>
 </ul>
 <p><strong>profile.json</strong></p>
 <ul>
@@ -13119,7 +13119,7 @@ div#notebook {
 II.<a href="#2">Data Cleaning</a><br>
 III.<a href="#3">Data Preprocessing</a><br>
 　　3.1. <a href="#3.1">Wrangle Data</a><br>
-　　　　Method <a href="#Method-1-wrangle">Using a moduled class</a><br>
+　　　　<a href="#Method-1-wrangle">Method: Using a moduled class</a><br>
 　　3.2. <a href="#3.2">CHECK the wrangled data</a><br>
 <a href="#References">References</a></p>
 
@@ -13163,22 +13163,35 @@ III.<a href="#3">Data Preprocessing</a><br>
 <div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
 </div><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<h1 id="I.-[Data-Exploration](#Start)"><a class="anchor" id="1">I. [Data Exploration](#Start)</a><a class="anchor-link" href="#I.-[Data-Exploration](#Start)">&#182;</a></h1><h2 id="1.1-Basic-Information">1.1 Basic Information<a class="anchor-link" href="#1.1-Basic-Information">&#182;</a></h2><ul>
-<li>.head()<ul>
-<li>Index, Columns(Features)</li>
-</ul>
-</li>
-<li>.info()<ul>
-<li>NaN values, data size</li>
-</ul>
-</li>
-<li>.describe()<ul>
-<li>Statistik infomation</li>
-</ul>
-</li>
-<li>.unique()</li>
-<li>.value_counts()</li>
-</ul>
+<h1 id="I.-[Data-Exploration](#Start)"><a class="anchor" id="1">I. [Data Exploration](#Start)</a><a class="anchor-link" href="#I.-[Data-Exploration](#Start)">&#182;</a></h1><h2 id="1.1-Basic-Information">1.1 Basic Information<a class="anchor-link" href="#1.1-Basic-Information">&#182;</a></h2><table>
+<thead><tr>
+<th style="text-align:left">Method</th>
+<th style="text-align:left">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left">.head()</td>
+<td style="text-align:left">Index, Columns(Features)</td>
+</tr>
+<tr>
+<td style="text-align:left">.info()</td>
+<td style="text-align:left">NaN values, data size</td>
+</tr>
+<tr>
+<td style="text-align:left">.describe()</td>
+<td style="text-align:left">Statistik infomation</td>
+</tr>
+<tr>
+<td style="text-align:left">.unique()</td>
+<td style="text-align:left"></td>
+</tr>
+<tr>
+<td style="text-align:left">.value_counts()</td>
+<td style="text-align:left"></td>
+</tr>
+</tbody>
+</table>
 
 </div>
 </div>
@@ -15453,81 +15466,104 @@ The number of data in updated &#39;offer_id&#39; is 148805 == 116361+32444
 </div><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
 <h1 id="III.-[Data-Preprocessing](#Start)"><a class="anchor" id="3">III. [Data Preprocessing](#Start)</a><a class="anchor-link" href="#III.-[Data-Preprocessing](#Start)">&#182;</a></h1><p>The data preprocessing follows the program flow chart below:
-<img src="./images/flow_chart.jpg"/>
-We get two ideal datasets:
-I. target_dataset
-<img src="./images/target_dataset.png"/></p>
-<ol>
-<li><code>person</code> (int)<ul>
-<li>Id for person: already encoded to int number</li>
-</ul>
-</li>
-<li><code>offer_id</code> (object of str)<ul>
-<li>Id for offer: already encoded to int number</li>
-<li><strong>Values</strong>: from '0' to '9'</li>
-</ul>
-</li>
-<li><code>time_received</code> (float)<ul>
-<li>time of reveiving the offer</li>
-<li><strong>Values</strong>: <code>NaN</code> represent not received</li>
-</ul>
-</li>
-<li><code>time_viewed</code> (float) <ul>
-<li>time of viewing the offer</li>
-<li><strong>Values</strong>: <code>NaN</code> represent not viewed</li>
-</ul>
-</li>
-<li><p><code>time_transaction</code> (object of str)</p>
-<ul>
-<li>time of the transactions within an transaction unit(within one unique offer_id of one person, there may be more transaction units)</li>
-<li><strong>Values</strong>: there maybe more than one transactions within a transaction unit, so use <code>str</code>(obeject) to represent<ul>
-<li>for offer is informational(offer_id is 2 or 7)<ul>
-<li>there is only one value(float): None or the first transaction time</li>
-</ul>
-</li>
-<li>for other offers<ul>
-<li><code>''</code> means there is no transaction</li>
-<li><code>',3.8,5.9'</code> means there is two transactions, one is at time 3.8, another in at time 5.9 </li>
-</ul>
-</li>
-</ul>
-</li>
-</ul>
-</li>
-<li><p><code>time_completed</code> (float)</p>
-<ul>
-<li>time of complete the offer</li>
-<li><strong>Values</strong>: <code>NaN</code> represent not completed</li>
-</ul>
-</li>
-<li><code>amount_with_offer</code> (float)<ul>
-<li>amount of transaction(s) within this transaction unit</li>
-<li><strong>Values</strong>: '0.0' represent no transaction</li>
-</ul>
-</li>
-<li><code>label_effective_offer</code> (int) <strong>!!!Attention: there is no infomation about 'offer viewed'</strong><ul>
-<li>the label to mark the completion level of offer</li>
-<li><strong>Values</strong>:<ul>
-<li><code>1</code>: <ul>
-<li>for informational offer there is at least one transaction within duration; </li>
-<li>for other offer there should be 'offer completed'</li>
-</ul>
-</li>
-<li><code>0</code>: <ul>
-<li>for informational offer there is no valid transaction within the duration but 'offer received'; </li>
-<li>for other offers there is no 'offer completed', but within duration there maybe some amount, although the amount of transactions not fulfil requirements</li>
-</ul>
-</li>
-<li><code>-1</code>: the init label, when there is no 'offer received', the label keeps '-1'</li>
-<li><code>-2</code>: Special, some interesting discovering after the data was wrangled<ul>
-<li>represent some people: they only have transactions within all the experimantal time , no offer was sent to them(this situation appears because some person haven't received any offer)</li>
-</ul>
-</li>
-</ul>
-</li>
-</ul>
-</li>
-</ol>
+<img src="./images/flow_chart.jpg"/></p>
+<p>Finally, we get two ideal datasets:<br>
+<strong>I. target_datase</strong></p>
+<table>
+<thead><tr>
+<th style="text-align:left">Column</th>
+<th style="text-align:left">Type</th>
+<th style="text-align:left">Explanation</th>
+<th style="text-align:left">Total Count</th>
+<th style="text-align:left">n_NaN</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left">person</td>
+<td style="text-align:left">int</td>
+<td style="text-align:left">id of customer</td>
+<td style="text-align:left">66506</td>
+<td style="text-align:left">-</td>
+</tr>
+<tr>
+<td style="text-align:left">offer_id</td>
+<td style="text-align:left">str object</td>
+<td style="text-align:left">values: '-1', '0'-'9'<br> represent 10 offers,  '-1'means no offer received</td>
+<td style="text-align:left">66506</td>
+<td style="text-align:left">-</td>
+</tr>
+<tr>
+<td style="text-align:left">time_received</td>
+<td style="text-align:left">float</td>
+<td style="text-align:left">time when offer received<br>'NaN' represents not received</td>
+<td style="text-align:left">66506</td>
+<td style="text-align:left">5</td>
+</tr>
+<tr>
+<td style="text-align:left">time_viewed</td>
+<td style="text-align:left">float</td>
+<td style="text-align:left">time when offer viewed<br>'NaN' represents not viewed</td>
+<td style="text-align:left">66506</td>
+<td style="text-align:left">16646</td>
+</tr>
+<tr>
+<td style="text-align:left">time_transaction</td>
+<td style="text-align:left">str object</td>
+<td style="text-align:left">time then transaction(s) takes place<br>'' represents there is no transaction<br>',3.0,5.0' means there are two transactions under this offer, one is at time 3.0, another in at time 5.0</td>
+<td style="text-align:left">66506</td>
+<td style="text-align:left">8754</td>
+</tr>
+<tr>
+<td style="text-align:left">time_completed</td>
+<td style="text-align:left">float</td>
+<td style="text-align:left">time when offer completed<br>'NaN' represents not completed</td>
+<td style="text-align:left">66506</td>
+<td style="text-align:left">26099</td>
+</tr>
+<tr>
+<td style="text-align:left">amount_with_offer</td>
+<td style="text-align:left">float</td>
+<td style="text-align:left">How much money has been paid under this offer<br>'0.0' represent no transaction</td>
+<td style="text-align:left">66506</td>
+<td style="text-align:left">-</td>
+</tr>
+<tr>
+<td style="text-align:left">label_effective_offer</td>
+<td style="text-align:left">int</td>
+<td style="text-align:left">the label to mark the completing level of offer<br><strong>More details See Notice below</strong></td>
+<td style="text-align:left">66506</td>
+<td style="text-align:left">-</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Notice: label_effective_offer</strong><br>
+<strong>(Attention: there is no infomation about 'offer viewed')</strong></p>
+<table>
+<thead><tr>
+<th style="text-align:left">Values</th>
+<th style="text-align:left">Meaning</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left">1</td>
+<td style="text-align:left">for informational offer there is at least one transaction within duration;<br>for other offer there should be 'offer completed'</td>
+</tr>
+<tr>
+<td style="text-align:left">0</td>
+<td style="text-align:left">for informational offer there is no valid transaction within the duration but 'offer received'; <br> for other offers there is no 'offer completed', but within duration there maybe some amount, although the amount of transactions not fulfil requirements</td>
+</tr>
+<tr>
+<td style="text-align:left">-1</td>
+<td style="text-align:left">the initial label, when there is no 'offer received', the label keeps '-1'</td>
+</tr>
+<tr>
+<td style="text-align:left">-2</td>
+<td style="text-align:left">represent some people: they only have transactions within all the experimantal time , no offer was sent to them</td>
+</tr>
+</tbody>
+</table>
 
 </div>
 </div>
@@ -15535,11 +15571,68 @@ I. target_dataset
 <div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
 </div><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<p>II. transcript_offer(final updated version)<br></p>
-<p><img src="./images/transcript_offer.png"/>
-most are the same as the original dataset, just some values in column 'offer_id' are updated <br>
-in figure, the value '6,5' represent:<br>
-　　this transaction is valid for both of the two offer_ids: one is '6', another is '5'.</p>
+<p><strong>II. transcript_offer(final updated version)</strong><br></p>
+<table>
+<thead><tr>
+<th style="text-align:left">Column</th>
+<th style="text-align:left">Type</th>
+<th style="text-align:left">Explanation</th>
+<th style="text-align:left">Total Count</th>
+<th style="text-align:left">NaN Count</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left">person</td>
+<td style="text-align:left">int</td>
+<td style="text-align:left">Id of customer</td>
+<td style="text-align:left">272762</td>
+<td style="text-align:left">-</td>
+</tr>
+<tr>
+<td style="text-align:left">event</td>
+<td style="text-align:left">str object</td>
+<td style="text-align:left">State of the record:<br> 'offer received', 'offer viewed', 'transaction', 'offer completed'</td>
+<td style="text-align:left">272762</td>
+<td style="text-align:left">-</td>
+</tr>
+<tr>
+<td style="text-align:left">time</td>
+<td style="text-align:left">float</td>
+<td style="text-align:left">Happend time of this record</td>
+<td style="text-align:left">272762</td>
+<td style="text-align:left">-</td>
+</tr>
+<tr>
+<td style="text-align:left">amount</td>
+<td style="text-align:left">float</td>
+<td style="text-align:left">How much money paid under this record</td>
+<td style="text-align:left">272762</td>
+<td style="text-align:left">-</td>
+</tr>
+<tr>
+<td style="text-align:left">offer_id</td>
+<td style="text-align:left">str object</td>
+<td style="text-align:left">The offer_id bound with this record e.g. <br>'1' represents offer1;<br>'-1' bounded with no offer<br>'1,3' means this record is valid for two offers: one is offer1, another is offer3</td>
+<td style="text-align:left">272762</td>
+<td style="text-align:left">-</td>
+</tr>
+<tr>
+<td style="text-align:left">duration</td>
+<td style="text-align:left">float</td>
+<td style="text-align:left">The valid duration of the offer<br>'NaN' implies the offer_id is '-1'</td>
+<td style="text-align:left">272762</td>
+<td style="text-align:left">123957</td>
+</tr>
+<tr>
+<td style="text-align:left">offer_type</td>
+<td style="text-align:left">str object</td>
+<td style="text-align:left">The offer type</td>
+<td style="text-align:left">272762</td>
+<td style="text-align:left">123957</td>
+</tr>
+</tbody>
+</table>
 
 </div>
 </div>
@@ -15566,11 +15659,10 @@ in figure, the value '6,5' represent:<br>
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[29]:</div>
+<div class="prompt input_prompt">In&nbsp;[&nbsp;]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="c1"># prepare two dataset to wrangle</span>
-
 <span class="c1"># 1. target_dataset </span>
 <span class="n">target_dataset_list</span> <span class="o">=</span> <span class="p">[]</span>
 
@@ -15582,179 +15674,6 @@ in figure, the value '6,5' represent:<br>
 </div>
 </div>
 
-<div class="output_wrapper">
-<div class="output">
-
-
-<div class="output_area">
-
-    <div class="prompt output_prompt">Out[29]:</div>
-
-
-
-<div class="output_html rendered_html output_subarea output_execute_result">
-<div>
-<style scoped>
-    .dataframe tbody tr th:only-of-type {
-        vertical-align: middle;
-    }
-
-    .dataframe tbody tr th {
-        vertical-align: top;
-    }
-
-    .dataframe thead th {
-        text-align: right;
-    }
-</style>
-<table border="1" class="dataframe">
-  <thead>
-    <tr style="text-align: right;">
-      <th></th>
-      <th>person</th>
-      <th>event</th>
-      <th>time</th>
-      <th>amount</th>
-      <th>offer_id</th>
-      <th>duration</th>
-      <th>offer_type</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <th>0</th>
-      <td>3</td>
-      <td>offer received</td>
-      <td>0.00</td>
-      <td>0.00</td>
-      <td>3</td>
-      <td>7.0</td>
-      <td>bogo</td>
-    </tr>
-    <tr>
-      <th>1</th>
-      <td>5</td>
-      <td>offer received</td>
-      <td>0.00</td>
-      <td>0.00</td>
-      <td>9</td>
-      <td>7.0</td>
-      <td>discount</td>
-    </tr>
-    <tr>
-      <th>2</th>
-      <td>8</td>
-      <td>offer received</td>
-      <td>0.00</td>
-      <td>0.00</td>
-      <td>8</td>
-      <td>5.0</td>
-      <td>bogo</td>
-    </tr>
-    <tr>
-      <th>3</th>
-      <td>12</td>
-      <td>offer received</td>
-      <td>0.00</td>
-      <td>0.00</td>
-      <td>2</td>
-      <td>4.0</td>
-      <td>informational</td>
-    </tr>
-    <tr>
-      <th>4</th>
-      <td>13</td>
-      <td>offer received</td>
-      <td>0.00</td>
-      <td>0.00</td>
-      <td>4</td>
-      <td>10.0</td>
-      <td>discount</td>
-    </tr>
-    <tr>
-      <th>...</th>
-      <td>...</td>
-      <td>...</td>
-      <td>...</td>
-      <td>...</td>
-      <td>...</td>
-      <td>...</td>
-      <td>...</td>
-    </tr>
-    <tr>
-      <th>272757</th>
-      <td>16949</td>
-      <td>offer completed</td>
-      <td>29.75</td>
-      <td>0.00</td>
-      <td>6</td>
-      <td>10.0</td>
-      <td>discount</td>
-    </tr>
-    <tr>
-      <th>272758</th>
-      <td>16959</td>
-      <td>transaction</td>
-      <td>29.75</td>
-      <td>1.59</td>
-      <td>-1</td>
-      <td>NaN</td>
-      <td>NaN</td>
-    </tr>
-    <tr>
-      <th>272759</th>
-      <td>16964</td>
-      <td>transaction</td>
-      <td>29.75</td>
-      <td>9.53</td>
-      <td>-1</td>
-      <td>NaN</td>
-      <td>NaN</td>
-    </tr>
-    <tr>
-      <th>272760</th>
-      <td>16979</td>
-      <td>transaction</td>
-      <td>29.75</td>
-      <td>3.61</td>
-      <td>-1</td>
-      <td>NaN</td>
-      <td>NaN</td>
-    </tr>
-    <tr>
-      <th>272761</th>
-      <td>16987</td>
-      <td>transaction</td>
-      <td>29.75</td>
-      <td>3.53</td>
-      <td>-1</td>
-      <td>NaN</td>
-      <td>NaN</td>
-    </tr>
-  </tbody>
-</table>
-<p>272762 rows × 7 columns</p>
-</div>
-</div>
-
-</div>
-
-</div>
-</div>
-
-</div>
-<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
-</div><div class="inner_cell">
-<div class="text_cell_render border-box-sizing rendered_html">
-<h1 id="!!!Attention:-The-Wrangling-takes-more-than-2-hours...">!!!Attention: The Wrangling takes more than 2 hours...<a class="anchor-link" href="#!!!Attention:-The-Wrangling-takes-more-than-2-hours...">&#182;</a></h1><ul>
-<li>The source code for Wrangling are .py files in project<ul>
-<li>With Class: <code>data_preprocessing_class.py</code></li>
-</ul>
-</li>
-</ul>
-
-</div>
-</div>
 </div>
 <div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
 </div><div class="inner_cell">
@@ -15765,7 +15684,7 @@ in figure, the value '6,5' represent:<br>
 </pre></div>
 </li>
 </ul>
-
+<h4 id="!!!Attention:-The-Wrangling-takes-more-than-2-hours...">!!!Attention: The Wrangling takes more than 2 hours...<a class="anchor-link" href="#!!!Attention:-The-Wrangling-takes-more-than-2-hours...">&#182;</a></h4>
 </div>
 </div>
 </div>
@@ -15786,7 +15705,7 @@ in figure, the value '6,5' represent:<br>
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[30]:</div>
+<div class="prompt input_prompt">In&nbsp;[&nbsp;]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="c1"># import the Class </span>
@@ -15800,7 +15719,7 @@ in figure, the value '6,5' represent:<br>
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[31]:</div>
+<div class="prompt input_prompt">In&nbsp;[&nbsp;]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="c1"># init the Class</span>
@@ -15814,7 +15733,7 @@ in figure, the value '6,5' represent:<br>
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[32]:</div>
+<div class="prompt input_prompt">In&nbsp;[&nbsp;]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="c1"># get the unique_person list</span>
@@ -15847,44 +15766,10 @@ in figure, the value '6,5' represent:<br>
 </div>
 </div>
 
-<div class="output_wrapper">
-<div class="output">
-
-
-<div class="output_area">
-
-    <div class="prompt"></div>
-
-
-<div class="output_subarea output_stream output_stderr output_text">
-<pre>D:\JustPractice\1_MS_Geek_salute\PythonAnaconda\lib\site-packages\pandas\core\indexing.py:965: SettingWithCopyWarning: 
-A value is trying to be set on a copy of a slice from a DataFrame.
-Try using .loc[row_indexer,col_indexer] = value instead
-
-See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-  self.obj[item] = s
-</pre>
-</div>
-</div>
-
-<div class="output_area">
-
-    <div class="prompt"></div>
-
-
-<div class="output_subarea output_stream output_stdout output_text">
-<pre>Data for all person wrangled, time cost: 8481.067322015762s
-</pre>
-</div>
-</div>
-
-</div>
-</div>
-
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[34]:</div>
+<div class="prompt input_prompt">In&nbsp;[&nbsp;]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="c1"># change target_dataset_list(list of dicts) to DataFrame</span>
@@ -15901,7 +15786,7 @@ See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stab
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[35]:</div>
+<div class="prompt input_prompt">In&nbsp;[&nbsp;]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="n">target_dataset</span>
@@ -15911,189 +15796,6 @@ See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stab
 </div>
 </div>
 
-<div class="output_wrapper">
-<div class="output">
-
-
-<div class="output_area">
-
-    <div class="prompt output_prompt">Out[35]:</div>
-
-
-
-<div class="output_html rendered_html output_subarea output_execute_result">
-<div>
-<style scoped>
-    .dataframe tbody tr th:only-of-type {
-        vertical-align: middle;
-    }
-
-    .dataframe tbody tr th {
-        vertical-align: top;
-    }
-
-    .dataframe thead th {
-        text-align: right;
-    }
-</style>
-<table border="1" class="dataframe">
-  <thead>
-    <tr style="text-align: right;">
-      <th></th>
-      <th>person</th>
-      <th>offer_id</th>
-      <th>time_received</th>
-      <th>time_viewed</th>
-      <th>time_transaction</th>
-      <th>time_completed</th>
-      <th>amount_with_offer</th>
-      <th>label_effective_offer</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <th>0</th>
-      <td>3.0</td>
-      <td>3</td>
-      <td>0.0</td>
-      <td>0.25</td>
-      <td>,5.5</td>
-      <td>5.50</td>
-      <td>19.89</td>
-      <td>1</td>
-    </tr>
-    <tr>
-      <th>1</th>
-      <td>3.0</td>
-      <td>7</td>
-      <td>7.0</td>
-      <td>9.00</td>
-      <td>9.25</td>
-      <td>9.25</td>
-      <td>19.67</td>
-      <td>1</td>
-    </tr>
-    <tr>
-      <th>2</th>
-      <td>3.0</td>
-      <td>0</td>
-      <td>17.0</td>
-      <td>17.00</td>
-      <td>,21.25</td>
-      <td>21.25</td>
-      <td>21.72</td>
-      <td>1</td>
-    </tr>
-    <tr>
-      <th>3</th>
-      <td>3.0</td>
-      <td>8</td>
-      <td>21.0</td>
-      <td>24.25</td>
-      <td>,21.25</td>
-      <td>21.25</td>
-      <td>21.72</td>
-      <td>1</td>
-    </tr>
-    <tr>
-      <th>4</th>
-      <td>5.0</td>
-      <td>9</td>
-      <td>0.0</td>
-      <td>0.75</td>
-      <td></td>
-      <td>NaN</td>
-      <td>0.00</td>
-      <td>0</td>
-    </tr>
-    <tr>
-      <th>...</th>
-      <td>...</td>
-      <td>...</td>
-      <td>...</td>
-      <td>...</td>
-      <td>...</td>
-      <td>...</td>
-      <td>...</td>
-      <td>...</td>
-    </tr>
-    <tr>
-      <th>66496</th>
-      <td>14695.0</td>
-      <td>1</td>
-      <td>21.0</td>
-      <td>21.00</td>
-      <td></td>
-      <td>NaN</td>
-      <td>0.00</td>
-      <td>0</td>
-    </tr>
-    <tr>
-      <th>66497</th>
-      <td>14695.0</td>
-      <td>9</td>
-      <td>24.0</td>
-      <td>NaN</td>
-      <td>,29.25</td>
-      <td>NaN</td>
-      <td>4.62</td>
-      <td>0</td>
-    </tr>
-    <tr>
-      <th>66498</th>
-      <td>16139.0</td>
-      <td>2</td>
-      <td>21.0</td>
-      <td>21.00</td>
-      <td>-1</td>
-      <td>NaN</td>
-      <td>0.00</td>
-      <td>0</td>
-    </tr>
-    <tr>
-      <th>66499</th>
-      <td>16139.0</td>
-      <td>1</td>
-      <td>24.0</td>
-      <td>24.00</td>
-      <td></td>
-      <td>NaN</td>
-      <td>0.00</td>
-      <td>0</td>
-    </tr>
-    <tr>
-      <th>66500</th>
-      <td>11903.0</td>
-      <td>1</td>
-      <td>24.0</td>
-      <td>24.00</td>
-      <td></td>
-      <td>NaN</td>
-      <td>0.00</td>
-      <td>0</td>
-    </tr>
-  </tbody>
-</table>
-<p>66501 rows × 8 columns</p>
-</div>
-</div>
-
-</div>
-
-</div>
-</div>
-
-</div>
-<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
-</div><div class="inner_cell">
-<div class="text_cell_render border-box-sizing rendered_html">
-<div class="highlight"><pre><span></span><span class="c1"># Save the wrangled data</span>
-<span class="n">transcript_offer</span><span class="o">.</span><span class="n">to_csv</span><span class="p">(</span><span class="s1">&#39;./data_generated/transcript_offer_wrangled.csv&#39;</span><span class="p">,</span> <span class="n">index</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
-<span class="n">target_dataset</span><span class="o">.</span><span class="n">to_csv</span><span class="p">(</span><span class="s1">&#39;./data_generated/target_dataset_wrangled.csv&#39;</span><span class="p">,</span> <span class="n">index</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
-</pre></div>
-
-</div>
-</div>
 </div>
 <div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
 </div><div class="inner_cell">
@@ -16122,7 +15824,21 @@ See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stab
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[37]:</div>
+<div class="prompt input_prompt">In&nbsp;[&nbsp;]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">transcript_offer</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="s1">&#39;./data_generated/transcript_offer_wrangled.csv&#39;</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="p">{</span><span class="s1">&#39;person&#39;</span><span class="p">:</span> <span class="nb">int</span><span class="p">})</span>
+<span class="n">target_dataset</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="s1">&#39;./data_generated/target_dataset_wrangled.csv&#39;</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="p">{</span><span class="s1">&#39;person&#39;</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="s1">&#39;offer_id&#39;</span><span class="p">:</span> <span class="nb">str</span><span class="p">})</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[62]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="n">target_dataset</span><span class="o">.</span><span class="n">head</span><span class="p">()</span>
@@ -16138,7 +15854,7 @@ See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stab
 
 <div class="output_area">
 
-    <div class="prompt output_prompt">Out[37]:</div>
+    <div class="prompt output_prompt">Out[62]:</div>
 
 
 
@@ -16174,7 +15890,7 @@ See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stab
   <tbody>
     <tr>
       <th>0</th>
-      <td>3.0</td>
+      <td>3</td>
       <td>3</td>
       <td>0.0</td>
       <td>0.25</td>
@@ -16185,7 +15901,7 @@ See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stab
     </tr>
     <tr>
       <th>1</th>
-      <td>3.0</td>
+      <td>3</td>
       <td>7</td>
       <td>7.0</td>
       <td>9.00</td>
@@ -16196,7 +15912,7 @@ See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stab
     </tr>
     <tr>
       <th>2</th>
-      <td>3.0</td>
+      <td>3</td>
       <td>0</td>
       <td>17.0</td>
       <td>17.00</td>
@@ -16207,7 +15923,7 @@ See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stab
     </tr>
     <tr>
       <th>3</th>
-      <td>3.0</td>
+      <td>3</td>
       <td>8</td>
       <td>21.0</td>
       <td>24.25</td>
@@ -16218,11 +15934,11 @@ See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stab
     </tr>
     <tr>
       <th>4</th>
-      <td>5.0</td>
+      <td>5</td>
       <td>9</td>
       <td>0.0</td>
       <td>0.75</td>
-      <td></td>
+      <td>NaN</td>
       <td>NaN</td>
       <td>0.00</td>
       <td>0</td>
@@ -16240,7 +15956,7 @@ See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stab
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[38]:</div>
+<div class="prompt input_prompt">In&nbsp;[63]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="n">target_dataset</span><span class="o">.</span><span class="n">info</span><span class="p">()</span>
@@ -16265,16 +15981,16 @@ RangeIndex: 66501 entries, 0 to 66500
 Data columns (total 8 columns):
  #   Column                 Non-Null Count  Dtype  
 ---  ------                 --------------  -----  
- 0   person                 66501 non-null  float64
+ 0   person                 66501 non-null  int32  
  1   offer_id               66501 non-null  object 
  2   time_received          66501 non-null  float64
  3   time_viewed            49860 non-null  float64
- 4   time_transaction       66501 non-null  object 
+ 4   time_transaction       57747 non-null  object 
  5   time_completed         40407 non-null  float64
  6   amount_with_offer      66501 non-null  float64
  7   label_effective_offer  66501 non-null  int64  
-dtypes: float64(5), int64(1), object(2)
-memory usage: 4.1+ MB
+dtypes: float64(4), int32(1), int64(1), object(2)
+memory usage: 3.8+ MB
 </pre>
 </div>
 </div>
@@ -16285,7 +16001,7 @@ memory usage: 4.1+ MB
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[39]:</div>
+<div class="prompt input_prompt">In&nbsp;[64]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="n">transcript_offer</span><span class="o">.</span><span class="n">head</span><span class="p">()</span>
@@ -16301,7 +16017,7 @@ memory usage: 4.1+ MB
 
 <div class="output_area">
 
-    <div class="prompt output_prompt">Out[39]:</div>
+    <div class="prompt output_prompt">Out[64]:</div>
 
 
 
@@ -16336,7 +16052,7 @@ memory usage: 4.1+ MB
   <tbody>
     <tr>
       <th>0</th>
-      <td>3.0</td>
+      <td>3</td>
       <td>offer received</td>
       <td>0.0</td>
       <td>0.0</td>
@@ -16346,7 +16062,7 @@ memory usage: 4.1+ MB
     </tr>
     <tr>
       <th>1</th>
-      <td>5.0</td>
+      <td>5</td>
       <td>offer received</td>
       <td>0.0</td>
       <td>0.0</td>
@@ -16356,7 +16072,7 @@ memory usage: 4.1+ MB
     </tr>
     <tr>
       <th>2</th>
-      <td>8.0</td>
+      <td>8</td>
       <td>offer received</td>
       <td>0.0</td>
       <td>0.0</td>
@@ -16366,7 +16082,7 @@ memory usage: 4.1+ MB
     </tr>
     <tr>
       <th>3</th>
-      <td>12.0</td>
+      <td>12</td>
       <td>offer received</td>
       <td>0.0</td>
       <td>0.0</td>
@@ -16376,7 +16092,7 @@ memory usage: 4.1+ MB
     </tr>
     <tr>
       <th>4</th>
-      <td>13.0</td>
+      <td>13</td>
       <td>offer received</td>
       <td>0.0</td>
       <td>0.0</td>
@@ -16397,7 +16113,7 @@ memory usage: 4.1+ MB
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[40]:</div>
+<div class="prompt input_prompt">In&nbsp;[65]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="n">transcript_offer</span><span class="o">.</span><span class="n">info</span><span class="p">()</span>
@@ -16418,19 +16134,19 @@ memory usage: 4.1+ MB
 
 <div class="output_subarea output_stream output_stdout output_text">
 <pre>&lt;class &#39;pandas.core.frame.DataFrame&#39;&gt;
-Int64Index: 272762 entries, 0 to 272761
+RangeIndex: 272762 entries, 0 to 272761
 Data columns (total 7 columns):
  #   Column      Non-Null Count   Dtype  
 ---  ------      --------------   -----  
- 0   person      272762 non-null  float64
+ 0   person      272762 non-null  int32  
  1   event       272762 non-null  object 
  2   time        272762 non-null  float64
  3   amount      272762 non-null  float64
  4   offer_id    272762 non-null  object 
  5   duration    148805 non-null  float64
  6   offer_type  148805 non-null  object 
-dtypes: float64(4), object(3)
-memory usage: 26.6+ MB
+dtypes: float64(3), int32(1), object(3)
+memory usage: 13.5+ MB
 </pre>
 </div>
 </div>
@@ -16448,7 +16164,7 @@ memory usage: 26.6+ MB
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[41]:</div>
+<div class="prompt input_prompt">In&nbsp;[66]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="c1"># CHECK the list of unique_person </span>
@@ -16473,13 +16189,13 @@ memory usage: 26.6+ MB
 
 <div class="output_area">
 
-    <div class="prompt output_prompt">Out[41]:</div>
+    <div class="prompt output_prompt">Out[66]:</div>
 
 
 
 
 <div class="output_text output_subarea output_execute_result">
-<pre>array([ 5639., 15391.,   872., 14763.,  6789.])</pre>
+<pre>array([ 5639, 15391,   872, 14763,  6789])</pre>
 </div>
 
 </div>
@@ -16501,7 +16217,7 @@ memory usage: 26.6+ MB
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[42]:</div>
+<div class="prompt input_prompt">In&nbsp;[67]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="c1"># reduced 5 person in &#39;transcript_offer&#39;</span>
@@ -16518,7 +16234,7 @@ memory usage: 26.6+ MB
 
 <div class="output_area">
 
-    <div class="prompt output_prompt">Out[42]:</div>
+    <div class="prompt output_prompt">Out[67]:</div>
 
 
 
@@ -16553,7 +16269,7 @@ memory usage: 26.6+ MB
   <tbody>
     <tr>
       <th>14272</th>
-      <td>5639.0</td>
+      <td>5639</td>
       <td>transaction</td>
       <td>0.25</td>
       <td>4.74</td>
@@ -16563,7 +16279,7 @@ memory usage: 26.6+ MB
     </tr>
     <tr>
       <th>19395</th>
-      <td>15391.0</td>
+      <td>15391</td>
       <td>transaction</td>
       <td>0.75</td>
       <td>16.62</td>
@@ -16573,7 +16289,7 @@ memory usage: 26.6+ MB
     </tr>
     <tr>
       <th>61614</th>
-      <td>872.0</td>
+      <td>872</td>
       <td>transaction</td>
       <td>7.25</td>
       <td>0.65</td>
@@ -16583,7 +16299,7 @@ memory usage: 26.6+ MB
     </tr>
     <tr>
       <th>77551</th>
-      <td>872.0</td>
+      <td>872</td>
       <td>transaction</td>
       <td>9.25</td>
       <td>1.91</td>
@@ -16593,7 +16309,7 @@ memory usage: 26.6+ MB
     </tr>
     <tr>
       <th>95136</th>
-      <td>14763.0</td>
+      <td>14763</td>
       <td>transaction</td>
       <td>12.75</td>
       <td>17.51</td>
@@ -16603,7 +16319,7 @@ memory usage: 26.6+ MB
     </tr>
     <tr>
       <th>96434</th>
-      <td>5639.0</td>
+      <td>5639</td>
       <td>transaction</td>
       <td>13.25</td>
       <td>5.09</td>
@@ -16613,7 +16329,7 @@ memory usage: 26.6+ MB
     </tr>
     <tr>
       <th>97362</th>
-      <td>6789.0</td>
+      <td>6789</td>
       <td>transaction</td>
       <td>13.50</td>
       <td>22.75</td>
@@ -16623,7 +16339,7 @@ memory usage: 26.6+ MB
     </tr>
     <tr>
       <th>97802</th>
-      <td>15391.0</td>
+      <td>15391</td>
       <td>transaction</td>
       <td>13.50</td>
       <td>27.60</td>
@@ -16633,7 +16349,7 @@ memory usage: 26.6+ MB
     </tr>
     <tr>
       <th>98606</th>
-      <td>14763.0</td>
+      <td>14763</td>
       <td>transaction</td>
       <td>13.75</td>
       <td>28.70</td>
@@ -16643,7 +16359,7 @@ memory usage: 26.6+ MB
     </tr>
     <tr>
       <th>126518</th>
-      <td>6789.0</td>
+      <td>6789</td>
       <td>transaction</td>
       <td>15.75</td>
       <td>27.20</td>
@@ -16653,7 +16369,7 @@ memory usage: 26.6+ MB
     </tr>
     <tr>
       <th>145281</th>
-      <td>872.0</td>
+      <td>872</td>
       <td>transaction</td>
       <td>17.00</td>
       <td>1.25</td>
@@ -16663,7 +16379,7 @@ memory usage: 26.6+ MB
     </tr>
     <tr>
       <th>164094</th>
-      <td>14763.0</td>
+      <td>14763</td>
       <td>transaction</td>
       <td>18.50</td>
       <td>11.53</td>
@@ -16673,7 +16389,7 @@ memory usage: 26.6+ MB
     </tr>
     <tr>
       <th>203208</th>
-      <td>5639.0</td>
+      <td>5639</td>
       <td>transaction</td>
       <td>22.00</td>
       <td>7.40</td>
@@ -16683,7 +16399,7 @@ memory usage: 26.6+ MB
     </tr>
     <tr>
       <th>216337</th>
-      <td>872.0</td>
+      <td>872</td>
       <td>transaction</td>
       <td>23.75</td>
       <td>3.14</td>
@@ -16693,7 +16409,7 @@ memory usage: 26.6+ MB
     </tr>
     <tr>
       <th>230672</th>
-      <td>6789.0</td>
+      <td>6789</td>
       <td>transaction</td>
       <td>24.00</td>
       <td>17.67</td>
@@ -16703,7 +16419,7 @@ memory usage: 26.6+ MB
     </tr>
     <tr>
       <th>239721</th>
-      <td>5639.0</td>
+      <td>5639</td>
       <td>transaction</td>
       <td>24.75</td>
       <td>8.78</td>
@@ -16713,7 +16429,7 @@ memory usage: 26.6+ MB
     </tr>
     <tr>
       <th>255722</th>
-      <td>14763.0</td>
+      <td>14763</td>
       <td>transaction</td>
       <td>26.50</td>
       <td>9.72</td>
@@ -16723,7 +16439,7 @@ memory usage: 26.6+ MB
     </tr>
     <tr>
       <th>260533</th>
-      <td>14763.0</td>
+      <td>14763</td>
       <td>transaction</td>
       <td>27.25</td>
       <td>18.97</td>
@@ -16733,7 +16449,7 @@ memory usage: 26.6+ MB
     </tr>
     <tr>
       <th>260593</th>
-      <td>15391.0</td>
+      <td>15391</td>
       <td>transaction</td>
       <td>27.25</td>
       <td>19.03</td>
@@ -16766,7 +16482,7 @@ memory usage: 26.6+ MB
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[43]:</div>
+<div class="prompt input_prompt">In&nbsp;[68]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="c1"># more details for 5 person</span>
@@ -16783,7 +16499,7 @@ memory usage: 26.6+ MB
 
 <div class="output_area">
 
-    <div class="prompt output_prompt">Out[43]:</div>
+    <div class="prompt output_prompt">Out[68]:</div>
 
 
 
@@ -16884,7 +16600,7 @@ So age and enroll date maybe two important factors that imply the way to interac
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[44]:</div>
+<div class="prompt input_prompt">In&nbsp;[69]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="c1"># modify the target_dataset</span>
@@ -16926,7 +16642,7 @@ So age and enroll date maybe two important factors that imply the way to interac
 <div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
 </div><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<h2 id="Tips(for-myself)">Tips(for myself)<a class="anchor-link" href="#Tips(for-myself)">&#182;</a></h2><ol>
+<h4 id="Tips(for-myself)">Tips(for myself)<a class="anchor-link" href="#Tips(for-myself)">&#182;</a></h4><ol>
 <li><p>'obeject' can store more possible values than 'int'</p>
 <ul>
 <li><strong>offer_id</strong>: for <code>event == 'transaction'</code>, one transaction may releted to more than one 'offer_id'  </li>
@@ -16965,7 +16681,7 @@ So age and enroll date maybe two important factors that imply the way to interac
 <div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
 </div><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<h1 id="Summary(for-myself)">Summary(for myself)<a class="anchor-link" href="#Summary(for-myself)">&#182;</a></h1><ol>
+<h4 id="Summary(for-myself)">Summary(for myself)<a class="anchor-link" href="#Summary(for-myself)">&#182;</a></h4><ol>
 <li><p>Form my own naming style: Under Score Case with Hungarian notation</p>
 <ul>
 <li>_list, _df at the end shows the variable type</li>

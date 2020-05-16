@@ -13077,80 +13077,101 @@ div#notebook {
 <div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
 </div><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<h2 id="Dataset-I.-target_dataset">Dataset I. target_dataset<a class="anchor-link" href="#Dataset-I.-target_dataset">&#182;</a></h2><p><br>
-<img src="./images/target_dataset.png"/></p>
-<p>Explanation for the columns:</p>
-<ol>
-<li><code>person</code> (int)<ul>
-<li>Id for person: already encoded to int number</li>
-</ul>
-</li>
-<li><code>offer_id</code> (object of str)<ul>
-<li>Id for offer: already encoded to int number</li>
-<li><strong>Values</strong>: from '0' to '9'</li>
-</ul>
-</li>
-<li><code>time_received</code> (float)<ul>
-<li>time of reveiving the offer</li>
-<li><strong>Values</strong>: <code>NaN</code> represent not received</li>
-</ul>
-</li>
-<li><code>time_viewed</code> (float) <ul>
-<li>time of viewing the offer</li>
-<li><strong>Values</strong>: <code>NaN</code> represent not viewed</li>
-</ul>
-</li>
-<li><p><code>time_transaction</code> (object of str)</p>
-<ul>
-<li>time of the transactions within an transaction unit(within one unique offer_id of one person, there may be more transaction units)</li>
-<li><strong>Values</strong>: there maybe more than one transactions within a transaction unit, so use <code>str</code>(obeject) to represent<ul>
-<li>for offer is informational(offer_id is 2 or 7)<ul>
-<li>there is only one value(float): None or the first transaction time</li>
-</ul>
-</li>
-<li>for other offers<ul>
-<li><code>''</code> means there is no transaction</li>
-<li><code>',3.8,5.9'</code> means there is two transactions, one is at time 3.8, another in at time 5.9 </li>
-</ul>
-</li>
-</ul>
-</li>
-</ul>
-</li>
-<li><p><code>time_completed</code> (float)</p>
-<ul>
-<li>time of complete the offer</li>
-<li><strong>Values</strong>: <code>NaN</code> represent not completed</li>
-</ul>
-</li>
-<li><code>amount_with_offer</code> (float)<ul>
-<li>amount of transaction(s) within this transaction unit</li>
-<li><strong>Values</strong>: '0.0' represent no transaction</li>
-</ul>
-</li>
-<li><code>label_effective_offer</code> (int) <strong>!!!Attention: there is no infomation about 'offer viewed'</strong><ul>
-<li>the label to mark the completion level of offer</li>
-<li><strong>Values</strong>:<ul>
-<li><code>1</code>: <ul>
-<li>for informational offer there is at least one transaction within duration; </li>
-<li>for other offer there should be 'offer completed'</li>
-</ul>
-</li>
-<li><code>0</code>: <ul>
-<li>for informational offer there is no valid transaction within the duration but 'offer received'; </li>
-<li>for other offers there is no 'offer completed', but within duration there maybe some amount, although the amount of transactions not fulfil requirements</li>
-</ul>
-</li>
-<li><code>-1</code>: the init label, when there is no 'offer received', the label keeps '-1'</li>
-<li><code>-2</code>: Special, some interesting discovering after the data was wrangled<ul>
-<li>represent some people: they only have transactions within all the experimantal time , no offer was sent to them(this situation appears because some person haven't received any offer)</li>
-</ul>
-</li>
-</ul>
-</li>
-</ul>
-</li>
-</ol>
+<h3 id="Dataset-I.-target_dataset">Dataset I. target_dataset<a class="anchor-link" href="#Dataset-I.-target_dataset">&#182;</a></h3><table>
+<thead><tr>
+<th style="text-align:left">Column</th>
+<th style="text-align:left">Type</th>
+<th style="text-align:left">Explanation</th>
+<th style="text-align:left">Total Count</th>
+<th style="text-align:left">n_NaN</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left">person</td>
+<td style="text-align:left">int</td>
+<td style="text-align:left">id of customer</td>
+<td style="text-align:left">66506</td>
+<td style="text-align:left">-</td>
+</tr>
+<tr>
+<td style="text-align:left">offer_id</td>
+<td style="text-align:left">str object</td>
+<td style="text-align:left">values: '-1', '0'-'9'<br> represent 10 offers,  '-1'means no offer received</td>
+<td style="text-align:left">66506</td>
+<td style="text-align:left">-</td>
+</tr>
+<tr>
+<td style="text-align:left">time_received</td>
+<td style="text-align:left">float</td>
+<td style="text-align:left">time when offer received<br>'NaN' represents not received</td>
+<td style="text-align:left">66506</td>
+<td style="text-align:left">5</td>
+</tr>
+<tr>
+<td style="text-align:left">time_viewed</td>
+<td style="text-align:left">float</td>
+<td style="text-align:left">time when offer viewed<br>'NaN' represents not viewed</td>
+<td style="text-align:left">66506</td>
+<td style="text-align:left">16646</td>
+</tr>
+<tr>
+<td style="text-align:left">time_transaction</td>
+<td style="text-align:left">str object</td>
+<td style="text-align:left">time then transaction(s) takes place<br>'' represents there is no transaction<br>',3.0,5.0' means there are two transactions under this offer, one is at time 3.0, another in at time 5.0</td>
+<td style="text-align:left">66506</td>
+<td style="text-align:left">8754</td>
+</tr>
+<tr>
+<td style="text-align:left">time_completed</td>
+<td style="text-align:left">float</td>
+<td style="text-align:left">time when offer completed<br>'NaN' represents not completed</td>
+<td style="text-align:left">66506</td>
+<td style="text-align:left">26099</td>
+</tr>
+<tr>
+<td style="text-align:left">amount_with_offer</td>
+<td style="text-align:left">float</td>
+<td style="text-align:left">How much money has been paid under this offer<br>'0.0' represent no transaction</td>
+<td style="text-align:left">66506</td>
+<td style="text-align:left">-</td>
+</tr>
+<tr>
+<td style="text-align:left">label_effective_offer</td>
+<td style="text-align:left">int</td>
+<td style="text-align:left">the label to mark the completing level of offer<br><strong>More details See Notice below</strong></td>
+<td style="text-align:left">66506</td>
+<td style="text-align:left">-</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Notice: label_effective_offer</strong><br>
+<strong>(Attention: there is no infomation about 'offer viewed')</strong></p>
+<table>
+<thead><tr>
+<th style="text-align:left">Values</th>
+<th style="text-align:left">Meaning</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left">1</td>
+<td style="text-align:left">for informational offer there is at least one transaction within duration;<br>for other offer there should be 'offer completed'</td>
+</tr>
+<tr>
+<td style="text-align:left">0</td>
+<td style="text-align:left">for informational offer there is no valid transaction within the duration but 'offer received'; <br> for other offers there is no 'offer completed', but within duration there maybe some amount, although the amount of transactions not fulfil requirements</td>
+</tr>
+<tr>
+<td style="text-align:left">-1</td>
+<td style="text-align:left">the initial label, when there is no 'offer received', the label keeps '-1'</td>
+</tr>
+<tr>
+<td style="text-align:left">-2</td>
+<td style="text-align:left">represent some people: they only have transactions within all the experimantal time , no offer was sent to them</td>
+</tr>
+</tbody>
+</table>
 
 </div>
 </div>
@@ -13158,10 +13179,67 @@ div#notebook {
 <div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
 </div><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<h2 id="Dataset-II.-transcript_offer(updated)">Dataset II. transcript_offer(updated)<a class="anchor-link" href="#Dataset-II.-transcript_offer(updated)">&#182;</a></h2><p><img src="./images/transcript_offer.png"/>
-Some values in column 'offer_id' are updated.<br>
-In figure, the value '6,5' represent:<br>
-　　this transaction is valid for two offer_ids: one is '6', another is '5'.</p>
+<h3 id="Dataset-II.-transcript_offer(updated)">Dataset II. transcript_offer(updated)<a class="anchor-link" href="#Dataset-II.-transcript_offer(updated)">&#182;</a></h3><table>
+<thead><tr>
+<th style="text-align:left">Column</th>
+<th style="text-align:left">Type</th>
+<th style="text-align:left">Explanation</th>
+<th style="text-align:left">Total Count</th>
+<th style="text-align:left">n_NaN</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left">person</td>
+<td style="text-align:left">int</td>
+<td style="text-align:left">Id of customer</td>
+<td style="text-align:left">272762</td>
+<td style="text-align:left">-</td>
+</tr>
+<tr>
+<td style="text-align:left">event</td>
+<td style="text-align:left">str object</td>
+<td style="text-align:left">State of the record:<br> 'offer received', 'offer viewed', 'transaction', 'offer completed'</td>
+<td style="text-align:left">272762</td>
+<td style="text-align:left">-</td>
+</tr>
+<tr>
+<td style="text-align:left">time</td>
+<td style="text-align:left">float</td>
+<td style="text-align:left">Happend time of this record</td>
+<td style="text-align:left">272762</td>
+<td style="text-align:left">-</td>
+</tr>
+<tr>
+<td style="text-align:left">amount</td>
+<td style="text-align:left">float</td>
+<td style="text-align:left">How much money paid under this record</td>
+<td style="text-align:left">272762</td>
+<td style="text-align:left">-</td>
+</tr>
+<tr>
+<td style="text-align:left">offer_id</td>
+<td style="text-align:left">str object</td>
+<td style="text-align:left">The offer_id bound with this record e.g. <br>'1' represents offer1;<br>'-1' bounded with no offer<br>'1,3' means this record is valid for two offers: one is offer1, another is offer3</td>
+<td style="text-align:left">272762</td>
+<td style="text-align:left">-</td>
+</tr>
+<tr>
+<td style="text-align:left">duration</td>
+<td style="text-align:left">float</td>
+<td style="text-align:left">The valid duration of the offer<br>'NaN' implies the offer_id is '-1'</td>
+<td style="text-align:left">272762</td>
+<td style="text-align:left">123957</td>
+</tr>
+<tr>
+<td style="text-align:left">offer_type</td>
+<td style="text-align:left">str object</td>
+<td style="text-align:left">The offer type</td>
+<td style="text-align:left">272762</td>
+<td style="text-align:left">123957</td>
+</tr>
+</tbody>
+</table>
 
 </div>
 </div>
@@ -13179,7 +13257,7 @@ III.<a href="#3">Classes of responsiveness to the offers</a><br></p>
 <li>3.1 <a href="#3.3.1">Offer Distributions: none_offer VS. others</a><br></li>
 <li>3.2 <a href="#3.3.2">Interest Distributions: no_care VS. care(tried &amp; effective_offer)</a></li>
 <li>3.3 <a href="#3.3.3">Difficulty Distributions: tried VS. effective_offer</a><br></li>
-<li>3.4 <a href="#3.3.4">Index NIR: Is the offer significant popular?</a><br></li>
+<li>3.4 <a href="#3.3.4">Index IIR: Is the offer significant popular?</a><br></li>
 </ul>
 </li>
 <li><a href="#3.4">Summary</a></li>
@@ -13984,8 +14062,7 @@ I've tried according to 'age' &amp; 'gender', but there is an value 'O' in gende
 <div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
 </div><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<p>According to <a href="https://en.wikipedia.org/wiki/Income_tax_in_the_United_States#Marginal_tax_rates_for_2019">References[4]</a>, we get the <code>single taxable income</code> of Americans in 2018.
-<img src='./images/tax.png'></p>
+<p>According to <a href="https://en.wikipedia.org/wiki/Income_tax_in_the_United_States#Marginal_tax_rates_for_2019">References[4]</a>, we get the <code>single taxable income</code> of Americans in 2018.</p>
 <p>Choose the segment method as follow:</p>
 <table>
 <thead><tr>
@@ -14057,12 +14134,28 @@ I've tried according to 'age' &amp; 'gender', but there is an value 'O' in gende
 </tr>
 </tbody>
 </table>
-<p><strong>Notice:</strong></p>
-<ul>
-<li>low: 30,000-50,000</li>
-<li>medium: 50,001-82,500</li>
-<li>high: 82,501-120,000</li>
-</ul>
+<p><strong>Notice: Income Level</strong></p>
+<table>
+<thead><tr>
+<th style="text-align:left">Income</th>
+<th style="text-align:left">Values($)</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left">low</td>
+<td style="text-align:left">30,000-50,000</td>
+</tr>
+<tr>
+<td style="text-align:left">medium</td>
+<td style="text-align:left">50,001-82,500</td>
+</tr>
+<tr>
+<td style="text-align:left">high</td>
+<td style="text-align:left">82,501-120,000</td>
+</tr>
+</tbody>
+</table>
 
 </div>
 </div>
@@ -14260,6 +14353,7 @@ the number of records in the original target_dataset is 66506
 <th style="text-align:center">valid completed</th>
 <th style="text-align:center">transaction amount</th>
 <th style="text-align:left">Scenario</th>
+<th style="text-align:left">Logical expression</th>
 </tr>
 </thead>
 <tbody>
@@ -14270,6 +14364,7 @@ the number of records in the original target_dataset is 66506
 <td style="text-align:center">0</td>
 <td style="text-align:center"></td>
 <td style="text-align:left">haven't received the offer</td>
+<td style="text-align:left">label_effective_offer.isin([-1, -2])<br>&amp; time_viewed == NaN</td>
 </tr>
 <tr>
 <td style="text-align:left">2.no_care</td>
@@ -14277,7 +14372,8 @@ the number of records in the original target_dataset is 66506
 <td style="text-align:center">0</td>
 <td style="text-align:center">-</td>
 <td style="text-align:center"></td>
-<td style="text-align:left">received but not viewed.<br> regarded as no_care</td>
+<td style="text-align:left">received but not viewed.<br> regarded as "don't care"</td>
+<td style="text-align:left">label_effective_offer.isin([0, 1])<br>&amp; time_viewed == NaN</td>
 </tr>
 <tr>
 <td style="text-align:left"></td>
@@ -14286,6 +14382,7 @@ the number of records in the original target_dataset is 66506
 <td style="text-align:center">0</td>
 <td style="text-align:center">=0.0</td>
 <td style="text-align:left">received, viewed but no transaction</td>
+<td style="text-align:left">label_effective_offer == 0<br>&amp; amount == 0.0 <br>&amp; time_viewed.notnull()</td>
 </tr>
 <tr>
 <td style="text-align:left"></td>
@@ -14293,7 +14390,8 @@ the number of records in the original target_dataset is 66506
 <td style="text-align:center">1</td>
 <td style="text-align:center">1<br>viewed after completed</td>
 <td style="text-align:center"></td>
-<td style="text-align:left">received, but completed unintentionally</td>
+<td style="text-align:left">received, but completed unintentionally, namely viewing after completed</td>
+<td style="text-align:left">label_effective_offer == 1 <br>&amp; time_viewed &gt; time_completed</td>
 </tr>
 <tr>
 <td style="text-align:left">3.tried</td>
@@ -14301,7 +14399,8 @@ the number of records in the original target_dataset is 66506
 <td style="text-align:center">1</td>
 <td style="text-align:center">0</td>
 <td style="text-align:center">&gt;0.0</td>
-<td style="text-align:left">received, viewed, have transaction, but not fulfill the 'difficulty'</td>
+<td style="text-align:left">received, viewed, have transaction, but amount less than 'difficulty'</td>
+<td style="text-align:left">label_effective_offer == 0 <br>&amp; amount &gt; 0.0 <br>&amp; time_viewed.notnull()</td>
 </tr>
 <tr>
 <td style="text-align:left">4.effctive_offer</td>
@@ -14310,60 +14409,15 @@ the number of records in the original target_dataset is 66506
 <td style="text-align:center">1<br>viewed before completed</td>
 <td style="text-align:center"></td>
 <td style="text-align:left">viewed before completed,  effctive offer</td>
+<td style="text-align:left">label_effective_offer == 1 <br>&amp; time_viewed &lt; time_completed</td>
 </tr>
 </tbody>
 </table>
 <p><strong>NOTE：</strong></p>
 <ol>
 <li><strong>'valid completed'</strong>, means complete within the duration of the offer<br></li>
-<li>States like 0,0,1 or 0,1,0 or 0,1,1 are impossible in reality.</li>
+<li>States(received, viewed, valid completed) like 0,0,1 or 0,1,0 or 0,1,1 are impossible in reality.</li>
 <li><code>label_effective_offer == '1'</code> means received and is a valid completed<br></li>
-</ol>
-
-</div>
-</div>
-</div>
-<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
-</div><div class="inner_cell">
-<div class="text_cell_render border-box-sizing rendered_html">
-<p><strong>Response GROUPs:</strong></p>
-<ol>
-<li><code>none_offer</code>(passive)<br><ul>
-<li>I. not received, not viewed<ul>
-<li><code>label_effective_offer</code>.isin([-1, -2]) &amp; <code>time_viewed</code> == NaN </li>
-</ul>
-</li>
-</ul>
-</li>
-<li><code>no_care</code>(active)<br><ul>
-<li>I. received, but not viewed<ul>
-<li><code>label_effective_offer</code>.isin([0, 1]) &amp; <code>time_viewed</code> == NaN</li>
-</ul>
-</li>
-<li>II. received, viewed, but no transaction<ul>
-<li><code>label_effective_offer</code> == 0 &amp; <code>amount</code> == 0.0 &amp; <code>time_viewed</code>.notnull() </li>
-</ul>
-</li>
-<li>or III. received, viewed, completed but viewed time after completed time<ul>
-<li><code>label_effective_offer</code> == 1 &amp; <code>time_viewed</code> &gt; <code>time_completed</code> #when time_viewed is NaN, always False</li>
-</ul>
-</li>
-</ul>
-</li>
-<li><code>tried</code><br><ul>
-<li>I. received, viewed, have transaction but not valid completed<ul>
-<li><code>label_effective_offer</code> == 0 &amp; <code>amount</code> &gt; 0.0  &amp; <code>time_viewed</code>.notnull() </li>
-</ul>
-</li>
-</ul>
-</li>
-<li><code>effctive_offer</code><br><ul>
-<li>I. received, viewed, and completed, besides viewed time before completed time<ul>
-<li><code>label_effective_offer</code> == 1 &amp; <code>time_viewed</code> &lt; <code>time_completed</code> #when time_viewed is NaN, always False</li>
-</ul>
-</li>
-</ul>
-</li>
 </ol>
 
 </div>
@@ -17984,7 +18038,7 @@ See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stab
 <div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
 </div><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<h2 id="Tips(For-myself)">Tips(For myself)<a class="anchor-link" href="#Tips(For-myself)">&#182;</a></h2><ol>
+<h4 id="Tips(For-myself)">Tips(For myself)<a class="anchor-link" href="#Tips(For-myself)">&#182;</a></h4><ol>
 <li><p>数据更新</p>
 <ul>
 <li>更新informational offer的time_complete: 也就是time_transaction</li>
@@ -18021,7 +18075,7 @@ element-wise: &amp; | </li>
 <div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
 </div><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<h3 id="&#21487;&#35270;&#21270;">&#21487;&#35270;&#21270;<a class="anchor-link" href="#&#21487;&#35270;&#21270;">&#182;</a></h3><ol>
+<h4 id="&#21487;&#35270;&#21270;">&#21487;&#35270;&#21270;<a class="anchor-link" href="#&#21487;&#35270;&#21270;">&#182;</a></h4><ol>
 <li><p>FacetGrid没有考虑整体情况<br>
 有的子图单个分类数据为0, 导致预设定的legend等标注的并非指定对象</p>
 <ul>

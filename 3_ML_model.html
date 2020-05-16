@@ -13077,22 +13077,199 @@ div#notebook {
 <div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
 </div><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<h2 id="Dataset:-model_dataset">Dataset: model_dataset<a class="anchor-link" href="#Dataset:-model_dataset">&#182;</a></h2><p><img src="./images/model_dataset.png"/></p>
-<p>Explanation for part of columns:</p>
-<ol>
-<li>label_group (obeject): 4 groups of resonse to offers<ul>
-<li>'none_offer'</li>
-<li>'no_care'</li>
-<li>'tried'</li>
-<li>'effective_offer'</li>
-</ul>
-</li>
-<li>label_seg (int): 12 segments based on age and income<ul>
-<li>values: 1 ... 12  <br>  </li>
-</ul>
-</li>
-</ol>
-<p>(More details in <u>2_heuristic_exploration.ipynb</u>)</p>
+<h2 id="Dataset:-model_dataset">Dataset: model_dataset<a class="anchor-link" href="#Dataset:-model_dataset">&#182;</a></h2><table>
+<thead><tr>
+<th style="text-align:left">Column</th>
+<th style="text-align:left">Type</th>
+<th style="text-align:left">Explanation</th>
+<th style="text-align:left">Total Count</th>
+<th style="text-align:left">NaN Count</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left">person</td>
+<td style="text-align:left">int</td>
+<td style="text-align:left">id of customer</td>
+<td style="text-align:left">66506</td>
+<td style="text-align:left">-</td>
+</tr>
+<tr>
+<td style="text-align:left">offer_id</td>
+<td style="text-align:left">str object</td>
+<td style="text-align:left">values: '-1', '0'-'9'<br> represent 10 offers,  '-1'means no offer received</td>
+<td style="text-align:left">66506</td>
+<td style="text-align:left">-</td>
+</tr>
+<tr>
+<td style="text-align:left">time_received</td>
+<td style="text-align:left">float</td>
+<td style="text-align:left">time when offer received<br>'NaN' represents not received</td>
+<td style="text-align:left">66506</td>
+<td style="text-align:left">5</td>
+</tr>
+<tr>
+<td style="text-align:left">time_viewed</td>
+<td style="text-align:left">float</td>
+<td style="text-align:left">time when offer viewed<br>'NaN' represents not viewed</td>
+<td style="text-align:left">66506</td>
+<td style="text-align:left">16646</td>
+</tr>
+<tr>
+<td style="text-align:left">time_transaction</td>
+<td style="text-align:left">str object</td>
+<td style="text-align:left">time then transaction(s) takes place<br>'' represents there is no transaction<br>',3.0,5.0' means there are two transactions under this offer, one is at time 3.0, another in at time 5.0</td>
+<td style="text-align:left">66506</td>
+<td style="text-align:left">8754</td>
+</tr>
+<tr>
+<td style="text-align:left">time_completed</td>
+<td style="text-align:left">float</td>
+<td style="text-align:left">time when offer completed<br>'NaN' represents not completed</td>
+<td style="text-align:left">66506</td>
+<td style="text-align:left">26099</td>
+</tr>
+<tr>
+<td style="text-align:left">amount_with_offer</td>
+<td style="text-align:left">float</td>
+<td style="text-align:left">How much money has been paid under this offer<br>'0.0' represent no transaction</td>
+<td style="text-align:left">66506</td>
+<td style="text-align:left">-</td>
+</tr>
+<tr>
+<td style="text-align:left">label_effective_offer</td>
+<td style="text-align:left">int</td>
+<td style="text-align:left">the label to mark the completing level of offer<br><strong>More details See Notice below</strong></td>
+<td style="text-align:left">66506</td>
+<td style="text-align:left">-</td>
+</tr>
+<tr>
+<td style="text-align:left">reward</td>
+<td style="text-align:left">float</td>
+<td style="text-align:left">Reward after completing the offer</td>
+<td style="text-align:left">66501</td>
+<td style="text-align:left">5</td>
+</tr>
+<tr>
+<td style="text-align:left">difficulty</td>
+<td style="text-align:left">float</td>
+<td style="text-align:left">The minimum consumption to complete the offer</td>
+<td style="text-align:left">66501</td>
+<td style="text-align:left">5</td>
+</tr>
+<tr>
+<td style="text-align:left">duration</td>
+<td style="text-align:left">float</td>
+<td style="text-align:left">The valid duration of the offer<br>'NaN' implies the offer_id is '-1'</td>
+<td style="text-align:left">66501</td>
+<td style="text-align:left">5</td>
+</tr>
+<tr>
+<td style="text-align:left">offer_type</td>
+<td style="text-align:left">str object</td>
+<td style="text-align:left">'bogo', 'discount','informational'</td>
+<td style="text-align:left">66501</td>
+<td style="text-align:left">5</td>
+</tr>
+<tr>
+<td style="text-align:left">email</td>
+<td style="text-align:left">float</td>
+<td style="text-align:left">One Channel to send offer</td>
+<td style="text-align:left">66501</td>
+<td style="text-align:left">5</td>
+</tr>
+<tr>
+<td style="text-align:left">mobile</td>
+<td style="text-align:left">float</td>
+<td style="text-align:left">One Channel to send offer</td>
+<td style="text-align:left">66501</td>
+<td style="text-align:left">5</td>
+</tr>
+<tr>
+<td style="text-align:left">social</td>
+<td style="text-align:left">float</td>
+<td style="text-align:left">One Channel to send offer</td>
+<td style="text-align:left">66501</td>
+<td style="text-align:left">5</td>
+</tr>
+<tr>
+<td style="text-align:left">web</td>
+<td style="text-align:left">float</td>
+<td style="text-align:left">One Channel to send offer</td>
+<td style="text-align:left">66501</td>
+<td style="text-align:left">5</td>
+</tr>
+<tr>
+<td style="text-align:left">gender</td>
+<td style="text-align:left">str object</td>
+<td style="text-align:left">'male','female','other'</td>
+<td style="text-align:left">66506</td>
+<td style="text-align:left">-</td>
+</tr>
+<tr>
+<td style="text-align:left">age</td>
+<td style="text-align:left">int</td>
+<td style="text-align:left">Age of the customer</td>
+<td style="text-align:left">66506</td>
+<td style="text-align:left">-</td>
+</tr>
+<tr>
+<td style="text-align:left">income</td>
+<td style="text-align:left">float</td>
+<td style="text-align:left">Yearly income of the customer</td>
+<td style="text-align:left">66506</td>
+<td style="text-align:left">-</td>
+</tr>
+<tr>
+<td style="text-align:left">member_days</td>
+<td style="text-align:left">int</td>
+<td style="text-align:left">The days from enroll date to 2019.01.01</td>
+<td style="text-align:left">66506</td>
+<td style="text-align:left">-</td>
+</tr>
+<tr>
+<td style="text-align:left">label_group</td>
+<td style="text-align:left">str object</td>
+<td style="text-align:left">4 groups of resonse to offers<br>Values <strong>see Notice2. below</strong></td>
+<td style="text-align:left">66506</td>
+<td style="text-align:left">-</td>
+</tr>
+<tr>
+<td style="text-align:left">label_seg</td>
+<td style="text-align:left">int</td>
+<td style="text-align:left">1-12: 12 segments based on age and income</td>
+<td style="text-align:left">66506</td>
+<td style="text-align:left">-</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Notice 1.: label_effective_offer</strong><br>
+<strong>(Attention: there is no infomation about 'offer viewed')</strong></p>
+<table>
+<thead><tr>
+<th style="text-align:left">Values</th>
+<th style="text-align:left">Meaning</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left">1</td>
+<td style="text-align:left">for informational offer there is at least one transaction within duration;<br>for other offer there should be 'offer completed'</td>
+</tr>
+<tr>
+<td style="text-align:left">0</td>
+<td style="text-align:left">for informational offer there is no valid transaction within the duration but 'offer received'; <br> for other offers there is no 'offer completed', but within duration there maybe some amount, although the amount of transactions not fulfil requirements</td>
+</tr>
+<tr>
+<td style="text-align:left">-1</td>
+<td style="text-align:left">the initial label, when there is no 'offer received', the label keeps '-1'</td>
+</tr>
+<tr>
+<td style="text-align:left">-2</td>
+<td style="text-align:left">represent some people: they only have transactions within all the experimantal time , no offer was sent to them</td>
+</tr>
+</tbody>
+</table>
 
 </div>
 </div>
@@ -13100,9 +13277,188 @@ div#notebook {
 <div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
 </div><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<h3 id="10-Kinds-of-offer_id"><u>10 Kinds</u> of offer_id<a class="anchor-link" href="#10-Kinds-of-offer_id">&#182;</a></h3><table>
+<p><strong>Notice 2.: label_group</strong> (4 groups of resonse to offers)
+<br></p>
+<table>
 <thead><tr>
-<th style="text-align:left">offer_id #</th>
+<th style="text-align:left">Group</th>
+<th style="text-align:center">received</th>
+<th style="text-align:center">viewed</th>
+<th style="text-align:center">valid completed</th>
+<th style="text-align:center">transaction amount</th>
+<th style="text-align:left">Scenario</th>
+<th style="text-align:left">Logical expression</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left">1.none_offer</td>
+<td style="text-align:center">0</td>
+<td style="text-align:center">0</td>
+<td style="text-align:center">0</td>
+<td style="text-align:center"></td>
+<td style="text-align:left">haven't received the offer</td>
+<td style="text-align:left">label_effective_offer.isin([-1, -2])<br>&amp; time_viewed == NaN</td>
+</tr>
+<tr>
+<td style="text-align:left">2.no_care</td>
+<td style="text-align:center">1</td>
+<td style="text-align:center">0</td>
+<td style="text-align:center">-</td>
+<td style="text-align:center"></td>
+<td style="text-align:left">received but not viewed.<br> regarded as "don't care"</td>
+<td style="text-align:left">label_effective_offer.isin([0, 1])<br>&amp; time_viewed == NaN</td>
+</tr>
+<tr>
+<td style="text-align:left"></td>
+<td style="text-align:center">1</td>
+<td style="text-align:center">1</td>
+<td style="text-align:center">0</td>
+<td style="text-align:center">=0.0</td>
+<td style="text-align:left">received, viewed but no transaction</td>
+<td style="text-align:left">label_effective_offer == 0<br>&amp; amount == 0.0 <br>&amp; time_viewed.notnull()</td>
+</tr>
+<tr>
+<td style="text-align:left"></td>
+<td style="text-align:center">1</td>
+<td style="text-align:center">1</td>
+<td style="text-align:center">1<br>viewed after completed</td>
+<td style="text-align:center"></td>
+<td style="text-align:left">received, but completed unintentionally, namely viewing after completed</td>
+<td style="text-align:left">label_effective_offer == 1 <br>&amp; time_viewed &gt; time_completed</td>
+</tr>
+<tr>
+<td style="text-align:left">3.tried</td>
+<td style="text-align:center">1</td>
+<td style="text-align:center">1</td>
+<td style="text-align:center">0</td>
+<td style="text-align:center">&gt;0.0</td>
+<td style="text-align:left">received, viewed, have transaction, but amount less than 'difficulty'</td>
+<td style="text-align:left">label_effective_offer == 0 <br>&amp; amount &gt; 0.0 <br>&amp; time_viewed.notnull()</td>
+</tr>
+<tr>
+<td style="text-align:left">4.effctive_offer</td>
+<td style="text-align:center">1</td>
+<td style="text-align:center">1</td>
+<td style="text-align:center">1<br>viewed before completed</td>
+<td style="text-align:center"></td>
+<td style="text-align:left">viewed before completed,  effctive offer</td>
+<td style="text-align:left">label_effective_offer == 1 <br>&amp; time_viewed &lt; time_completed</td>
+</tr>
+</tbody>
+</table>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p><strong>Notice 3.: label_seg</strong>  (12 segments based on age and income)
+<br></p>
+<table>
+<thead><tr>
+<th>Segment #</th>
+<th>Age Group (edge included)<br> (Experiment in 2018)</th>
+<th>Income</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1</td>
+<td>Millenials(-21 &amp; 22-37)</td>
+<td>low</td>
+</tr>
+<tr>
+<td>2</td>
+<td>Millenials(-21 &amp; 22-37)</td>
+<td>medium</td>
+</tr>
+<tr>
+<td>3</td>
+<td>Millenials(-21 &amp; 22-37)</td>
+<td>high</td>
+</tr>
+<tr>
+<td>4</td>
+<td>Gen X(38-53)</td>
+<td>low</td>
+</tr>
+<tr>
+<td>5</td>
+<td>Gen X(38-53)</td>
+<td>medium</td>
+</tr>
+<tr>
+<td>6</td>
+<td>Gen X(38-53)</td>
+<td>high</td>
+</tr>
+<tr>
+<td>7</td>
+<td>Baby Boomer(54-72)</td>
+<td>low</td>
+</tr>
+<tr>
+<td>8</td>
+<td>Baby Boomer(54-72)</td>
+<td>medium</td>
+</tr>
+<tr>
+<td>9</td>
+<td>Baby Boomer(54-72)</td>
+<td>high</td>
+</tr>
+<tr>
+<td>10</td>
+<td>Silent(73-90 &amp; 91+)</td>
+<td>low</td>
+</tr>
+<tr>
+<td>11</td>
+<td>Silent(73-90 &amp; 91+)</td>
+<td>medium</td>
+</tr>
+<tr>
+<td>12</td>
+<td>Silent(73-90 &amp; 91+)</td>
+<td>high</td>
+</tr>
+</tbody>
+</table>
+<p>Income Level:</p>
+<table>
+<thead><tr>
+<th style="text-align:left">Income</th>
+<th style="text-align:left">Values($)</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left">low</td>
+<td style="text-align:left">30,000-50,000</td>
+</tr>
+<tr>
+<td style="text-align:left">medium</td>
+<td style="text-align:left">50,001-82,500</td>
+</tr>
+<tr>
+<td style="text-align:left">high</td>
+<td style="text-align:left">82,501-120,000</td>
+</tr>
+</tbody>
+</table>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p><strong>Notice 4.: offer_id</strong>  (10 Kinds of offer)</p>
+<table>
+<thead><tr>
+<th style="text-align:left">offer_id</th>
 <th style="text-align:left">type</th>
 <th style="text-align:center">duration</th>
 <th style="text-align:center">requirement</th>
@@ -13179,159 +13535,6 @@ div#notebook {
 <td style="text-align:center">7</td>
 <td style="text-align:center">10</td>
 <td style="text-align:center">2</td>
-</tr>
-</tbody>
-</table>
-
-</div>
-</div>
-</div>
-<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
-</div><div class="inner_cell">
-<div class="text_cell_render border-box-sizing rendered_html">
-<h3 id="12-Segements-based-on-'age'-and-'income'"><u>12 Segements</u> based on 'age' and 'income'<a class="anchor-link" href="#12-Segements-based-on-'age'-and-'income'">&#182;</a></h3><p><br></p>
-<table>
-<thead><tr>
-<th>Segment #</th>
-<th>Age Group (edge included)<br> (Experiment in 2018)</th>
-<th>Income</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>1</td>
-<td>Millenials(-21 &amp; 22-37)</td>
-<td>low</td>
-</tr>
-<tr>
-<td>2</td>
-<td>Millenials(-21 &amp; 22-37)</td>
-<td>medium</td>
-</tr>
-<tr>
-<td>3</td>
-<td>Millenials(-21 &amp; 22-37)</td>
-<td>high</td>
-</tr>
-<tr>
-<td>4</td>
-<td>Gen X(38-53)</td>
-<td>low</td>
-</tr>
-<tr>
-<td>5</td>
-<td>Gen X(38-53)</td>
-<td>medium</td>
-</tr>
-<tr>
-<td>6</td>
-<td>Gen X(38-53)</td>
-<td>high</td>
-</tr>
-<tr>
-<td>7</td>
-<td>Baby Boomer(54-72)</td>
-<td>low</td>
-</tr>
-<tr>
-<td>8</td>
-<td>Baby Boomer(54-72)</td>
-<td>medium</td>
-</tr>
-<tr>
-<td>9</td>
-<td>Baby Boomer(54-72)</td>
-<td>high</td>
-</tr>
-<tr>
-<td>10</td>
-<td>Silent(73-90 &amp; 91+)</td>
-<td>low</td>
-</tr>
-<tr>
-<td>11</td>
-<td>Silent(73-90 &amp; 91+)</td>
-<td>medium</td>
-</tr>
-<tr>
-<td>12</td>
-<td>Silent(73-90 &amp; 91+)</td>
-<td>high</td>
-</tr>
-</tbody>
-</table>
-<p><strong>Notice:</strong></p>
-<ul>
-<li>low: 30,000-50,000</li>
-<li>medium: 50,001-82,500</li>
-<li>high: 82,501-120,000</li>
-</ul>
-
-</div>
-</div>
-</div>
-<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
-</div><div class="inner_cell">
-<div class="text_cell_render border-box-sizing rendered_html">
-<h3 id="4-Groups-of-possible-responsiveness-to-offer"><u>4 Groups</u> of possible responsiveness to offer<a class="anchor-link" href="#4-Groups-of-possible-responsiveness-to-offer">&#182;</a></h3><p><br></p>
-<table>
-<thead><tr>
-<th style="text-align:left">Group</th>
-<th style="text-align:center">received</th>
-<th style="text-align:center">viewed</th>
-<th style="text-align:center">valid completed</th>
-<th style="text-align:center">transaction amount</th>
-<th style="text-align:left">Scenario</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td style="text-align:left">1.none_offer</td>
-<td style="text-align:center">0</td>
-<td style="text-align:center">0</td>
-<td style="text-align:center">0</td>
-<td style="text-align:center"></td>
-<td style="text-align:left">haven't received the offer</td>
-</tr>
-<tr>
-<td style="text-align:left">2.no_care</td>
-<td style="text-align:center">1</td>
-<td style="text-align:center">0</td>
-<td style="text-align:center">-</td>
-<td style="text-align:center"></td>
-<td style="text-align:left">received but not viewed.<br> regarded as no_care</td>
-</tr>
-<tr>
-<td style="text-align:left"></td>
-<td style="text-align:center">1</td>
-<td style="text-align:center">1</td>
-<td style="text-align:center">0</td>
-<td style="text-align:center">=0.0</td>
-<td style="text-align:left">received, viewed but no transaction</td>
-</tr>
-<tr>
-<td style="text-align:left"></td>
-<td style="text-align:center">1</td>
-<td style="text-align:center">1</td>
-<td style="text-align:center">1<br>viewed after completed</td>
-<td style="text-align:center"></td>
-<td style="text-align:left">received, but completed unintentionally</td>
-</tr>
-<tr>
-<td style="text-align:left">3.tried</td>
-<td style="text-align:center">1</td>
-<td style="text-align:center">1</td>
-<td style="text-align:center">0</td>
-<td style="text-align:center">&gt;0.0</td>
-<td style="text-align:left">received, viewed, have transaction</td>
-</tr>
-<tr>
-<td style="text-align:left">4.effctive_offer</td>
-<td style="text-align:center">1</td>
-<td style="text-align:center">1</td>
-<td style="text-align:center">1<br>viewed before completed</td>
-<td style="text-align:center"></td>
-<td style="text-align:left">viewed before completed,  effctive offer</td>
 </tr>
 </tbody>
 </table>
@@ -14326,7 +14529,7 @@ memory usage: 13.2+ MB
 </div><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
 <h3 id="[Q3.1-Offer-prepared-to-sent-to-a-person,-will-this-offer-effective?](#Start)"><a class="anchor" id="3.1">[Q3.1 Offer prepared to sent to a person, will this offer effective?](#Start)</a><a class="anchor-link" href="#[Q3.1-Offer-prepared-to-sent-to-a-person,-will-this-offer-effective?](#Start)">&#182;</a></h3><ol>
-<li>Dataset: The data as follows (in label_group)<ul>
+<li>Dataset: Subset data in label_group<ul>
 <li>no_care</li>
 <li>tried</li>
 <li>effective_offer
@@ -14705,7 +14908,7 @@ weighted avg     0.7273    0.7272    0.7272     13301
 </div><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
 <h3 id="[Q3.2-Offer-already-sent-to-a-person,-is-this-offer-effective?](#Start)"><a class="anchor" id="3.2">[Q3.2 Offer already sent to a person, is this offer effective?](#Start)</a><a class="anchor-link" href="#[Q3.2-Offer-already-sent-to-a-person,-is-this-offer-effective?](#Start)">&#182;</a></h3><ol>
-<li>Dataset: The data as follows (in label_group)<ul>
+<li>Dataset: Subset data in label_group<ul>
 <li>no_care</li>
 <li>tried</li>
 <li>effective_offer
@@ -15319,7 +15522,7 @@ weighted avg     0.9248    0.9210    0.9205     13301
 </div><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
 <h3 id="[Q3.3-Given-a-person,-recommend-an-offer-with-the-most-effctivity.](#Start)"><a claa="anchor" id="3.3">[Q3.3 Given a person, recommend an offer with the most effctivity.](#Start)</a><a class="anchor-link" href="#[Q3.3-Given-a-person,-recommend-an-offer-with-the-most-effctivity.](#Start)">&#182;</a></h3><ol>
-<li>Dataset: The data as follows (in label_group)<ul>
+<li>Dataset: Subset data in label_group<ul>
 <li>tried: in this group exists transaction(s)</li>
 <li>effective_offer
 <br></li>
@@ -16080,6 +16283,111 @@ So I used MultiOutputClassifier(GradientBoostingClassifier())</li>
 </div>
 </div>
 </div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<ol>
+<li>Dataset: model_dataset</li>
+</ol>
+<p><br></p>
+<ol>
+<li>Target</li>
+</ol>
+<table>
+<thead><tr>
+<th style="text-align:left">Target</th>
+<th style="text-align:center">Value</th>
+<th style="text-align:left">Meaning</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left">amount_total</td>
+<td style="text-align:center">float</td>
+<td style="text-align:left">The total amount of money paid by a costomer</td>
+</tr>
+</tbody>
+</table>
+<ol>
+<li>Features</li>
+</ol>
+<table>
+<thead><tr>
+<th style="text-align:left">(Number: default 1)Features</th>
+<th style="text-align:left">Select reason</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left">age</td>
+<td style="text-align:left">basic info about person</td>
+</tr>
+<tr>
+<td style="text-align:left">income</td>
+<td style="text-align:left">basic info about person</td>
+</tr>
+<tr>
+<td style="text-align:left">member_days</td>
+<td style="text-align:left">basic info about person</td>
+</tr>
+<tr>
+<td style="text-align:left">(3)gender_</td>
+<td style="text-align:left">basic info about person<br>(3 kinds of 0-1 variables)</td>
+</tr>
+<tr>
+<td style="text-align:left">reward</td>
+<td style="text-align:left">bounded with offer</td>
+</tr>
+<tr>
+<td style="text-align:left">difficulty</td>
+<td style="text-align:left">bounded with offer</td>
+</tr>
+<tr>
+<td style="text-align:left">duration</td>
+<td style="text-align:left">bounded with offer</td>
+</tr>
+<tr>
+<td style="text-align:left">email</td>
+<td style="text-align:left">bounded with offer</td>
+</tr>
+<tr>
+<td style="text-align:left">mobile</td>
+<td style="text-align:left">bounded with offer</td>
+</tr>
+<tr>
+<td style="text-align:left">social</td>
+<td style="text-align:left">bounded with offer</td>
+</tr>
+<tr>
+<td style="text-align:left">web</td>
+<td style="text-align:left">bounded with offer</td>
+</tr>
+<tr>
+<td style="text-align:left">transaction_cnt</td>
+<td style="text-align:left">count of all transactions for a customer</td>
+</tr>
+<tr>
+<td style="text-align:left">offer_received_cnt</td>
+<td style="text-align:left">count of received offers for a customer</td>
+</tr>
+<tr>
+<td style="text-align:left">group_effctive_offer</td>
+<td style="text-align:left">Label of group(effctive_offer)</td>
+</tr>
+<tr>
+<td style="text-align:left">group_no_care</td>
+<td style="text-align:left">Label of group(no_care)</td>
+</tr>
+<tr>
+<td style="text-align:left">group_tried</td>
+<td style="text-align:left">Label of group(tried)</td>
+</tr>
+</tbody>
+</table>
+
+</div>
+</div>
+</div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
 <div class="prompt input_prompt">In&nbsp;[44]:</div>
@@ -16315,14 +16623,7 @@ epoch:20/20.. Training Loss: 17766.486.. Test Loss: 16884.414.. Time Cost: 94.54
 <div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
 </div><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<h1 id="Tips(for-myself)">Tips(for myself)<a class="anchor-link" href="#Tips(for-myself)">&#182;</a></h1>
-</div>
-</div>
-</div>
-<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
-</div><div class="inner_cell">
-<div class="text_cell_render border-box-sizing rendered_html">
-<h3 id="Model">Model<a class="anchor-link" href="#Model">&#182;</a></h3><ol>
+<h4 id="Tips(for-myself)">Tips(for myself)<a class="anchor-link" href="#Tips(for-myself)">&#182;</a></h4><h4 id="Model">Model<a class="anchor-link" href="#Model">&#182;</a></h4><ol>
 <li><p>Attribute:</p>
 <ul>
 <li>best<em>estimator</em>  </li>
@@ -16366,7 +16667,7 @@ epoch:20/20.. Training Loss: 17766.486.. Test Loss: 16884.414.. Time Cost: 94.54
 <div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
 </div><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<h3 id="NN-with-Pipeline">NN with Pipeline<a class="anchor-link" href="#NN-with-Pipeline">&#182;</a></h3>
+<h4 id="NN-with-Pipeline">NN with Pipeline<a class="anchor-link" href="#NN-with-Pipeline">&#182;</a></h4>
 </div>
 </div>
 </div>
