@@ -45,7 +45,7 @@ More precisely, I aim to answer two questions:
     demographic data for each customer
     | Columns | Data Type | Explanation | Total Count | NaN Count |
     |:-|:-|:-|:-|:-|
-    | age | int | the age of customer | 17000 | 2175 |
+    | age | int | the age of customer | 14825 | 2175 |
     | became_member_on | int | the enroll date of customer<br>e.g. 20170101 | 17000 | - |
     | gender | str | the gender of customer<br>**values:**'male','female','other' | 17000 | - |
     | id | str | the id of customer | 17000 | - |
@@ -288,8 +288,11 @@ There is no requirements for any special Modules.
 1. Distribution of 12 segments based on 'age' & 'income'  
 ![Distribution](./images/result.png)
 
-2. Model predict result  
-![result](./images/pred_result.png)
+2. Input infomation for predicting
+![input](./images/result_submit.png)
+
+3. Model predict result  
+![result](./images/result_pred.png)
 
 # References
 [[1]Create dummies from a column with multiple values in pandas](https://intellipaat.com/community/32880/create-dummies-from-a-column-with-multiple-values-in-pandas)<br>

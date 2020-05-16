@@ -16,7 +16,7 @@ import os
 
 
 app = Flask(__name__)
-images_folder = os.path.join('static', 'images')  #没用上 static足矣
+#images_folder = os.path.join('static', 'images')  #没用上 static足矣
 
 # load in model
 # model = joblib.load("../models/classifier.pkl")
