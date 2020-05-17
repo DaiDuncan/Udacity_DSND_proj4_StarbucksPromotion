@@ -65,7 +65,7 @@ More precisely, I aim to answer two questions:
 
 ## 2. Project Components <a name="Components"></a>
 ### 2.1 Data Wrangling
-Use the original data sets, based on a self designed program chart, I extract the transactions infomation direct to the related person and offer.   
+By using the original data sets, based on a self designed program flow chart([File:data_preprocessing_class.py](./data_preprocessing_class.py)), I extract the transactions infomation direct to the related person and offer.   
 
 Meantime, I wrangle the data type of some features (e.g. the 'value' column in `portfolio` is a list, should be unfolded), and transform some features to normal form(e.g. transform the member enroll date from 'int' to 'date').  
 
@@ -223,7 +223,15 @@ Workspace:.
 │  data_preprocessing_class.py
 │  LICENSE
 │  model_sent_target(GradientBoosting).pckl
+│  project report.pdf
 │  README.md
+│  test.ipynb
+│  
+├─.ipynb_checkpoints
+│      1_Data_Cleaning_and_Preprocessing-checkpoint.ipynb
+│      2_heuristic_exploration-checkpoint.ipynb
+│      3_ML_model-checkpoint.ipynb
+│      test-checkpoint.ipynb
 │      
 ├─app
 │  │  run.py
@@ -248,26 +256,34 @@ Workspace:.
 │      portfolio_cleaned.csv
 │      profile_cleaned.csv
 │      target_dataset_wrangled.csv
-│      target_dataset_wrangled_modified_.csv
+│      target_dataset_wrangled_modified.csv
+│      transcript_offer.csv
 │      transcript_offer_wrangled.csv
 │      
-├─images
-│      Distribution of income.png
-│      Distribution of the Segments with age & income.png
-│      flow_chart.jpg
-│      generations_age.png
-│      model_dataset.png
-│      offer_info.png
-│      pred_result.png
-│      result.png
-│      segment.png
-│      segment_group.png
-│      target_dataset.png
-│      tax.png
-│      The Distribution of Interest.png
-│      transcript_offer.png   
+└─images
+        Difficulty_Distributions.png
+        Distribution of income.png
+        Distribution of the Segments with age & income.png
+        flow_chart.jpg
+        generations_age.png
+        IIR.png
+        Interest_Distributions.png
+        model_dataset.png
+        Offer_Distributions.png
+        offer_info.png
+        result.png
+        result_pred.png
+        result_submit.png
+        segment.png
+        segment_group.png
+        target_dataset.png
+        tax.png
+        The Distribution of Interest.png
+        transcript_offer.png
 </pre>
 
+- project report.pdf
+The quick and clear overview of this project.
 
 - **Requirements**
 There is no requirements for any special Modules.
@@ -300,3 +316,4 @@ There is no requirements for any special Modules.
 [[3]Starbucks Promotion Optimization](https://towardsdatascience.com/starbucks-promotion-optimization-ca56e29fb584)<br>
 [[4]generations-and-age](https://www.pewresearch.org/topics/generations-and-age/)<br>
 [[5]single taxable income](https://en.wikipedia.org/wiki/Income_tax_in_the_United_States#Marginal_tax_rates_for_2019)<br>
+[[6]Investigating Starbucks Customers Segmentation using Unsupervised Machine Learning](https://medium.com/@jeffrisandy/investigating-starbucks-customers-segmentation-using-unsupervised-machine-learning-10b2ac0cfd3b)<br>
