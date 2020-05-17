@@ -282,10 +282,10 @@ Workspace:.
         transcript_offer.png
 </pre>
 
-- project report.pdf
+- project report.pdf  <br>
 The quick and clear overview of this project.
 
-- **Requirements**
+- **Requirements**  <br>
 There is no requirements for any special Modules.
 
 
